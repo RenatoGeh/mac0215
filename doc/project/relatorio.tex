@@ -13,6 +13,13 @@
 
 \addbibresource{references.bib}
 
+\newcommand\blfootnote[1]{%
+  \begingroup
+  \renewcommand\thefootnote{}\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \endgroup
+}
+
 \titleformat{\section}
   {\normalfont\scshape\bfseries}{\thesection}{1em}{}
 \titleformat{\subsection}
@@ -141,10 +148,12 @@ do projeto:
 
 \newpage
 
-\section{Referências\footnote{Os artigos listados abaixo podem ser encontrados em: 
-  \url{http://www.ime.usp.br/~renatolg/mac0215/articles/}}}
+\section{Referências}
 
 \printbibliography[title={Artigos},type=article]
 \printbibliography[title={Websites},type=misc]
+
+\blfootnote{Os artigos listados na referência acima podem ser encontrados em: 
+  \url{http://www.ime.usp.br/~renatolg/mac0215/articles/}}
 
 \end{document}
