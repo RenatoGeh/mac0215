@@ -9,6 +9,7 @@
 \usepackage{amsthm}
 \usepackage[top=1.0in,bottom=1.0in]{geometry}
 \usepackage{hyperref}
+\usepackage[singlelinecheck=false]{caption}
 \usepackage[backend=biber,url=true,doi=true,eprint=false]{biblatex}
 
 \addbibresource{references.bib}
@@ -29,6 +30,8 @@
 \titleformat{\subparagraph}
   {\normalfont}{\thesubparagraph}{1em}{}
 
+\captionsetup[table]{labelsep=space}
+
 \theoremstyle{plain}
 
 \newtheorem*{spn-def}{Definição}
@@ -47,18 +50,107 @@ Aluno: Renato Lui Geh (Bacharelado em Ciência da Computação)
 
 Orientador: Denis Deratani Mauá
 
-\section{Sum-Product Networks}
-\subsection{Definição}
+\section{Introdução}
+
+\paragraph{
+  Para compreendermos melhor as aplicações de uma Sum-Product Network precisamos primeiro entendermos distribuições
+de probabilidade multivariadas, as dificuldades de representa-las no espaço e o que é inferência de uma 
+distribuição.
+}
+
+\subsection{Distribuições de probabilidade multivariadas}
+
+\paragraph{
+  Uma distribuição de probabilidade multivariada é uma distribuição de probabilidade que resulta na probabilidade 
+de que cada variável aleatória $X_1,...,X_n$, para $n\geq{2}$, esteja em um dado intervalo ou conjunto para cada valor 
+$x_i$, $1\leq{i}\geq{n}$ correspondente. Se a distribuição possui apenas uma variável aleatória, dizemos que ela é uma
+distribuição de probabilidade monovariável. Um exemplo de distribuição multivariada segue abaixo:
+}
+
+\paragraph{
+  Consideremos um dado não viciado. Seja $A=1$ se o número tirado é par e $A=0$ caso contrário. Seja $B=1$ se o
+mesmo número tirado em $A$ é primo e $B=0$ caso contrário. Podemos construir a tabela abaixo:
+}
+
+\begin{table}[h]
+\caption{}
+\begin{tabular}{l | *{6}{c}}
+  & 1 & 2 & 3 & 4 & 5 & 6 \\
+\hline
+A & 0 & 1 & 0 & 1 & 0 & 1 \\
+B & 0 & 1 & 1 & 0 & 1 & 0 \\
+\end{tabular}
+\end{table}
+
+\paragraph{
+  A distribuição de probabilidade multivariada resultante é:
+}
+
+\subparagraph{$P(A=0,B=0) = P\{1\} = \frac{1}{6}$ \\
+  $P(A=1,B=0) = P\{4,6\} = \frac{2}{6}$ \\
+  $P(A=0,B=1) = P\{3,5\} = \frac{2}{6}$ \\
+  $P(A=1,B=1) = P\{2\} = \frac{1}{6}$
+} 
+
+\subsection{Escopo de uma distribuição}
+
+\paragraph{
+  Denotamos $P(X_1=x_1,...,X_n=x_n)$, dados valores $x_1,...,x_n$, uma distribuição de probabilidade multivariada
+com variáveis aleatórias $X_1,...,X_n$. Dada uma distribuição de probabilidade, chamamos de escopo da distribuição 
+o conjunto de variáveis que definem o domínio da função, ou seja, $X_1,...,X_n$. No caso da Tabela 1, o escopo da 
+probabilidade é o conjunto $\{A, B\}$. 
+}
+
+\begin{spn-def} Sejam $P_1 (X_1,...,X_k)$ e $P_2 (X_k,...,Y_n)$ distribuições de probabilidade multivariadas cujos
+  escopos têm mesmo tamanho.
+\begin{enumerate} \itemsep0pt
+  \item Dizemos que $P_1$ e $P_2$ tem mesmo escopo se para toda variável aleatória $X_i$ em $P_1$ existe uma
+variável aleatória $X_j$ em $P_2$ tal que $i=j$.
+  \item Dizemos que $P_1$ e $P_2$ tem escopos disjuntos se para qualquer variável aleatória $X_i$ em $P_1$,
+toda variável aleatória $X_j$ em $P_2$ obedece a regra $i\neq{j}$. 
+\end{enumerate}
+\end{spn-def}
+
+\subsection{Espaço de uma distribuição multivariada}
+
+\paragraph{
+  Vamos reutilizar a Tabela 1, renomeando $A$ para $X_1$ e $B$ para $X_2$. Portanto teremos $P(X_1=x_1,X_2=x_2)$. 
+Montando a tabela temos que:
+}
+
+\begin{table}[h*]
+\caption{}
+\begin{tabular}{*{3}{c}}
+$X_1$ & $X_2$ & $P(X_1=x_1,X_2=x_2)$ \\
+\hline
+$X_1=0$ & $X_2=0$ & $\frac{1}{6}$ \\
+$X_1=0$ & $X_2=1$ & $\frac{2}{6}$ \\
+$X_1=1$ & $X_2=0$ & $\frac{2}{6}$ \\
+$X_1=1$ & $X_2=1$ & $\frac{1}{6}$ \\
+\end{tabular}
+\end{table}
+
+\paragraph{
+  Pode-se ver que uma tabela com todas as possíveis probabilidades de todas as variáveis terá $2^n$ elementos, 
+onde $n$ é o número de variáveis aleatórias. Portanto o crescimento em espaço necessário é exponencial, o que
+é impraticável em conjuntos de dados maiores. A solução vem com o uso de Redes Profundas (ex.: Sum-Product Networks), 
+que tornam $O(2^n)$ em $O(n)$ no tamanho do grafo.
+}
+
+\subsection{Inferência}
+
+
+
+\section{Definição}
 
 \paragraph{
   Sum-Product Networks são uma nova classe de modelos probabilísticos cuja inferência é sempre
-tratável.
+polinomial no tamanho da rede.
 }
 
-\begin{spn-def} Uma SPN é, pela definição de Gens e Domingos\cite{gens-domingos}:
-
+\begin{spn-def} Uma SPN é recursivamente, pela definição de Gens e Domingos\cite{gens-domingos}:
 \begin{enumerate} \itemsep0pt
-  \item Uma distribuição univariante tratável.
+  \item Uma distribuição monovariável polinomial.
   \item Um produto de SPNs cujos escopos são disjuntos.
   \item Uma soma de SPNs com peso não negativo cujos elementos tem mesmo escopo.
   \item Nada mais é uma SPN.
@@ -66,8 +158,8 @@ tratável.
 \end{spn-def}
 
 \paragraph{
-  Podemos definir graficamente uma SPN como um grafo enraizado, direcionado e acíclico onde as 
-folhas são sempre variáveis (ou distribuições univariantes), seus nós internos são somas ou 
+  Podemos definir graficamente uma SPN como um grafo direcionado acíclico (DAG) onde as 
+folhas são sempre variáveis (ou distribuições monovariáveis), seus nós internos são somas ou 
 produtos e para todo vértice conectando um nó soma com um nó filho há um peso não negativo. 
 Também assume-se que toda soma e produto estão em alturas alternantes, ou seja, todo nó pai 
 de um nó interno que é soma é um produto e vice-versa.
@@ -79,22 +171,24 @@ de um nó interno que é soma é um produto e vice-versa.
   $\overline{x_1},...,\overline{x_d}$ são folhas e o resto dos nós são somas ou produtos.\cite{poon-domingos}}
 \end{figure}
 
-\subsection{Características}
+Dada uma distribuição multivariada, podemos construir uma SPN. 
+
+\section{Características}
 
 \paragraph{
   Há várias vantagens de SPNs sobre outras redes de aprendizado:
 }
 
 \begin{enumerate} \itemsep0pt
-  \item Estudos mostram que SPNs tem estrutura parecida a Modelos Gráficos Probabilisticos (PGM), 
-    mas inferência é mais rápida e precisa em dependências com grande largura.\cite{gens-domingos}
-  \item SPNs apresentam inferência mais rápida comparado a Redes Bayesianas, cuja inferência é
-    NP-difícil.
+  \item SPNs tem estrutura parecida a outros Modelos Gráficos Probabilisticos (PGM), mas a 
+    representação de certos tipos de independência é mais fácil.
+  \item SPNs tem inferência polinomial no tamanho do grafo, enquanto que inferência em Redes Bayesianas
+    é NP-difícil.
   \item Experimentos mostram que aprendizado de arquiteturas SPN tiveram melhores resultados quando
     comparadas a arquiteturas estáticas.\cite{clustering}
 \end{enumerate}
 
-\subsection{Aplicações}
+\section{Aplicações}
 
 SPNs obtiveram resultados impressionantes em muitos conjuntos de dados\cite{website:spn-uwashington}, tais como:
 
