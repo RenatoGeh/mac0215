@@ -53,7 +53,7 @@ Orientador: Denis Deratani Mauá
 \section{Introdução}
 
 \paragraph{
-  Para compreendermos melhor as aplicações de uma Sum-Product Network precisamos primeiro entendermos distribuições
+  Para compreendermos melhor as aplicações de uma Sum-Product Network precisamos primeiro entender distribuições
 de probabilidade multivariadas, o que é o escopo de uma distribuição, as dificuldades de representar todas as 
 probabilidades no espaço e o que é inferência de uma distribuição.
 }
@@ -63,8 +63,8 @@ probabilidades no espaço e o que é inferência de uma distribuição.
 \paragraph{
   Uma distribuição de probabilidade multivariada é uma distribuição de probabilidade que resulta na probabilidade 
 de que cada variável aleatória $X_1,...,X_n$, para $n\geq{2}$, esteja em um dado intervalo ou conjunto para cada valor 
-$x_i$, $1\leq{i}\geq{n}$ correspondente. Se a distribuição possui apenas uma variável aleatória, dizemos que ela é uma
-distribuição de probabilidade monovariável. Um exemplo de distribuição multivariada segue abaixo:
+$x_i$, $1\leq{i}\leq{n}$ correspondente. Se a distribuição possui apenas uma variável aleatória, dizemos que ela é 
+monovariável. Segue abaixo um exemplo:
 }
 
 \paragraph{
@@ -101,7 +101,7 @@ o conjunto de variáveis que definem o domínio da função, ou seja, $X_1,...,X
 probabilidade é o conjunto $\{A, B\}$. 
 }
 
-\begin{spn-def} Sejam $P_1 (X_1,...,X_k)$ e $P_2 (X_k,...,Y_n)$ distribuições de probabilidade multivariadas cujos
+\begin{spn-def} Sejam $P_1 (X_1,...,X_k)$ e $P_2 (X_p,...,X_n)$ distribuições de probabilidade multivariadas cujos
   escopos têm mesmo tamanho.
 \begin{enumerate} \itemsep0pt
   \item Dizemos que $P_1$ e $P_2$ tem mesmo escopo se para toda variável aleatória $X_i$ em $P_1$ existe uma
@@ -148,11 +148,11 @@ que tornam $O(2^n)$ em $O(n)$ no tamanho do grafo.
 polinomial no tamanho da rede.
 }
 
-\begin{spn-def} Uma SPN é recursivamente, pela definição de Gens e Domingos\cite{gens-domingos}:
+\begin{spn-def} Pela definição recursiva de Gens e Domingos\cite{gens-domingos}:
 \begin{enumerate} \itemsep0pt
-  \item Uma distribuição monovariável polinomial.
-  \item Um produto de SPNs cujos escopos são disjuntos.
-  \item Uma soma de SPNs com peso não negativo cujos elementos tem mesmo escopo.
+  \item Uma distribuição monovariável polinomial é uma SPN.
+  \item Um produto de SPNs cujos escopos são disjuntos é uma SPN.
+  \item Uma soma de SPNs com peso não negativo cujos elementos tem mesmo escopo é uma SPN.
   \item Nada mais é uma SPN.
 \end{enumerate}
 \end{spn-def}
@@ -172,8 +172,20 @@ de um nó interno que é soma é um produto e vice-versa.
 \end{figure}
 
 \paragraph{
-  Tomando a Figura 1 como exemplo, considere variáveis aleatórias binárias $X_1,...,X_n \in {0,1}$.
+  Tomando a Figura 1 como exemplo, considere variáveis aleatórias binárias $X_1,...,X_n \in \{0,1\}$. Para este
+exemplo $n=3$. Para todo $X_i$, indicamos por $x_i$ o indicador em que $X_i=1$ e $\overline{x}_i=0$ para quando
+$X_i=0$. Portanto, quando $X_i=1$, $x_i=1$ e $\overline{x}_i=0$; e quando $X_i=0$, $x_i=0$ e $\overline{x}_i=1$.
+A função multilinear do diagrama que representa a distribuição é a seguinte:
 } 
+
+\begin{equation}
+\begin{split}
+S(X_1,X_2,X_3) & =\\
+& =S(x_1,x_2,x_3,\overline{x}_1,\overline{x}_2,\overline{x}_3)=\\
+& =0,95x_1(0,1x_2+0,9\overline{x}_2)(0,5x_3+0,5\overline{x}_3)+\\
+& +0,05\overline{x}_1(0,2x_2+0,8\overline{x}_2)(0,3x_3+0,7\overline{x}_3)
+\end{split}
+\end{equation}
 
 \section{Características}
 
@@ -182,9 +194,9 @@ de um nó interno que é soma é um produto e vice-versa.
 }
 
 \begin{enumerate} \itemsep0pt
-  \item SPNs tem estrutura parecida a outros Modelos Gráficos Probabilisticos (PGM), mas a 
+  \item SPNs têm estrutura parecida a outros Modelos Gráficos Probabilisticos (PGM), mas a 
     representação de certos tipos de independência é mais fácil.
-  \item SPNs tem inferência polinomial no tamanho do grafo, enquanto que inferência em Redes Bayesianas
+  \item SPNs têm inferência polinomial no tamanho do grafo, enquanto que inferência em Redes Bayesianas
     é NP-difícil.
   \item Experimentos mostram que aprendizado de arquiteturas SPN tiveram melhores resultados quando
     comparadas a arquiteturas estáticas.\cite{clustering}
@@ -212,8 +224,8 @@ e os resultados das técnicas utilizadas.
 }
 
 \paragraph{
-  Será estudada a estrutura e propriedades de uma Sum-Product Network e em seguida
-aplicada as seguintes técnicas de aprendizado:
+  Será estudada a estrutura e propriedades de uma Sum-Product Network e em seguida serão
+aplicadas as seguintes técnicas de aprendizado:
 }
 
 \begin{itemize} \itemsep0pt
@@ -224,7 +236,7 @@ aplicada as seguintes técnicas de aprendizado:
 \end{itemize}
 
 \paragraph{
-  Em seguida o aluno irá comparar as técnicas implementadas e apresentar os resultados.
+  Depois o aluno irá comparar as técnicas implementadas e apresentar os resultados.
 }
 
 \section{Acompanhamento}
