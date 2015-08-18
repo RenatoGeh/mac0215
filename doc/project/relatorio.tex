@@ -53,7 +53,7 @@ Orientador: Denis Deratani Mauá
 \section{Introdução}
 
 \paragraph{
-  Para compreendermos melhor as aplicações de uma Sum-Product Network precisamos primeiro entender distribuições
+  Para compreendermos melhor as aplicações de uma Sum-Product Network (SPN) precisamos primeiro entender distribuições
 de probabilidade multivariadas, o que é o escopo de uma distribuição, as dificuldades de representar todas as 
 probabilidades no espaço e o que é inferência de uma distribuição.
 }
@@ -63,8 +63,8 @@ probabilidades no espaço e o que é inferência de uma distribuição.
 \paragraph{
   Uma distribuição de probabilidade multivariada é uma distribuição de probabilidade que resulta na probabilidade 
 de que cada variável aleatória $X_1,...,X_n$, para $n\geq{2}$, esteja em um dado intervalo ou conjunto para cada valor 
-$x_i$, $1\leq{i}\leq{n}$ correspondente. Se a distribuição possui apenas uma variável aleatória, dizemos que ela é 
-monovariável. Segue abaixo um exemplo:
+$x_i$, $1\leq{i}\leq{n}$ correspondente, sendo usadas em classificação de imagens em Sum-Product Networks. Se a 
+distribuição possui apenas uma variável aleatória, dizemos que ela é monovariável. Segue abaixo um exemplo:
 }
 
 \paragraph{
@@ -139,12 +139,29 @@ que tornam $O(2^n)$ em $O(n)$ no tamanho do grafo.
 
 \subsection{Inferência}
 
-
-
-\section{Definição}
+\paragraph{
+  Diz-se inferência a probabilidade de uma distribuição multivariada dados valores fixos de certas
+variáveis aleatórias. Formalmente, dado um conjunto $e$ de evidência que representa os valores 
+$X_{i_1}=x_{i_1},...,X_{i_k}=x_{i_k}$, a inferência de $P(X_1,...,X_n)$ dado $e$ é a probabilidade
+normalizada $P(x)=\frac{P'(x)}{Z}$, onde $Z$ é a função partição que normaliza $P'(x)$ em uma 
+distribuição de probabilidade e $P'(x)$ é a função não normalizada de $P(X_1,...,X_n)$ dado
+evidência $e$ que representa a inferência. Em Sum-Product Networks, $Z=S(*)=S(1,...,1)$. 
+}
 
 \paragraph{
-  Sum-Product Networks são uma nova classe de modelos probabilísticos cuja inferência é sempre
+  Como um exemplo, consideremos o caso em que as variáveis aleatórias representam variáveis 
+Booleanas. Seja o conjunto evidência $e=\{X_1=1,X_2=0\}$ numa distribuição $P(X_1,X_2,X_3,X_4)=
+P(x_1,x_2,x_3,x_4,\overline{x_1},\overline{x_2},\overline{x_3},\overline{x_4})$, associamos todas 
+as ocorrências $x_i \in e$ às suas equivalentes em $P$ e o resto a $0$. Para as variáveis que não 
+fixamos, associamos a $1$. Então, a inferência é $P(x_1=1,x_2=0,x_3=1,x_4=1,\overline{x_1}=0,
+\overline{x_2}=1,\overline{x_3}=1,\overline{x_4}=1)$, que representa todas as combinações de 
+probabilidade de $X_1,...,X_4$ dados eventos conhecidos $X_1=1$ e $X_2=0$.
+}
+
+\section{Definição de uma Sum-Product Network}
+
+\paragraph{
+  Sum-Product Networks (SPN) são uma nova classe de modelos probabilísticos cuja inferência é sempre
 polinomial no tamanho da rede.
 }
 
@@ -173,19 +190,24 @@ de um nó interno que é soma é um produto e vice-versa.
 
 \paragraph{
   Tomando a Figura 1 como exemplo, considere variáveis aleatórias binárias $X_1,...,X_n \in \{0,1\}$. Para este
-exemplo $n=3$. Para todo $X_i$, indicamos por $x_i$ o indicador em que $X_i=1$ e $\overline{x}_i=0$ para quando
+exemplo $n=3$. Para todo $X_i$, indicamos por $x_i$ o indicador em que $X_i=1$ e $\overline{x}_i$ para quando
 $X_i=0$. Portanto, quando $X_i=1$, $x_i=1$ e $\overline{x}_i=0$; e quando $X_i=0$, $x_i=0$ e $\overline{x}_i=1$.
-A função multilinear do diagrama que representa a distribuição é a seguinte:
+A função multilinear do diagrama que representa a SPN é a seguinte:
 } 
 
 \begin{equation}
 \begin{split}
 S(X_1,X_2,X_3) & =\\
 & =S(x_1,x_2,x_3,\overline{x}_1,\overline{x}_2,\overline{x}_3)=\\
-& =0,95x_1(0,1x_2+0,9\overline{x}_2)(0,5x_3+0,5\overline{x}_3)+\\
-& +0,05\overline{x}_1(0,2x_2+0,8\overline{x}_2)(0,3x_3+0,7\overline{x}_3)
+& =0.95x_1(0.1x_2+0.9\overline{x}_2)(0.5x_3+0.5\overline{x}_3)+\\
+&\phantom{=} +0.05\overline{x}_1(0.2x_2+0.8\overline{x}_2)(0.3x_3+0.7\overline{x}_3)
 \end{split}
 \end{equation}
+
+\paragraph{
+  Quando todos indicadores pertencentes ao escopo da SPN $S$ são iguais a $1$, diz-se que $S$ é
+$S(*)$ e que ela é a função partição. $S(x)/S(*)$ é a distribuição de probabilidade normalizada da SPN $S$.
+}
 
 \section{Características}
 
@@ -201,6 +223,8 @@ S(X_1,X_2,X_3) & =\\
   \item Experimentos mostram que aprendizado de arquiteturas SPN tiveram melhores resultados quando
     comparadas a arquiteturas estáticas.\cite{clustering}
 \end{enumerate}
+
+\newpage
 
 \section{Aplicações}
 
