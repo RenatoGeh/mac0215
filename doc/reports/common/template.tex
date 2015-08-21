@@ -12,7 +12,7 @@
 \usepackage[singlelinecheck=false]{caption}
 \usepackage[backend=biber,url=true,doi=true,eprint=false]{biblatex}
 
-\addbibresource{references.bib}
+\addbibresource{../common/references.bib}
 
 \newcommand\blfootnote[1]{%
   \begingroup
@@ -48,10 +48,10 @@
 
 \section{Referências}
 
-\printbibliography[title={Artigos},type=article]
-\printbibliography[title={Websites},type=misc]
-
 \blfootnote{Os artigos listados na referência acima podem ser encontrados em: 
   \url{http://www.ime.usp.br/~renatolg/mac0215/articles/}}
+
+\printbibliography[title={Artigos},type=article]
+\printbibliography[title={Websites},type=misc]
 
 \end{document}
