@@ -21,6 +21,8 @@
   \endgroup
 }
 
+\newcommand\defeq{\mathrel{\overset{\makebox[0pt]{\mbox{\normalfont\tiny\sffamily def}}}{=}}}
+
 \titleformat{\section}
   {\normalfont\scshape\bfseries}{\thesection}{1em}{}
 \titleformat{\subsection}
@@ -35,6 +37,7 @@
 \theoremstyle{plain}
 
 \newtheorem*{spn-def}{Definição}
+\newtheorem*{spn-thm}{Teorema}
 
 \title{\textbf{Modeling and Reasoning with Bayesian Networks: Compiling Bayesian Networks}}
 
@@ -265,7 +268,101 @@ casos $f$ não pode ser limitado, enquanto que o circuito pode.
 
 \paragraph{
   Vamos definir formalmente uma \textit{network polynomial}, mas antes vamos definir algumas
-notações. Dizemos que $$
+notações. Dizemos que $\theta_{x|\textbf{u}} \sim \textbf{z}$ para dizer que $x\textbf{u}$ é
+consistente com $\textbf{z}, x\textbf{u} \sim \textbf{z}$. Portanto, 
+$\prod_{\theta_{x|\textbf{u}} \sim \textbf{z}} \theta_{x|\textbf{u}}$ denota o produto de todos
+os parâmetros $\theta_{x|\textbf{u}}$ onde $x\textbf{u}$ seja consistente com $\textbf{z}$. A mesma
+notação aplica-se a $\lambda_x \sim \textbf{z}$.
+}
+
+\begin{spn-def} Seja $\mathcal{N}$ uma Rede Bayesiana sobre variáveis $\mathbf{Z}$. Para cada 
+variável $X$ com pais $\mathbf{U}$, chamamos de $\lambda_x$ o indicador de $x$ e 
+$\theta_{x|\textbf{u}}$ o parâmetro. A \textit{network polynomial} de $\mathcal{N}$ é definida como:
+\begin{equation}
+f \defeq \sum_x \prod_{\theta_{x|\textbf{u}} \sim \textbf{z}} \theta_{x|\textbf{u}} \prod_{\lambda_x \sim \textbf{z}} \lambda_x.
+\end{equation}
+O valor da \textit{network polynomial} $f$ com evidência $e$ é o resultado da função $f(e)$ 
+substituindo cada indicador $\lambda_x$ em $f$ com um valor consistente com $e$.
+\end{spn-def}
+
+\begin{spn-thm} Sejam $\mathcal{N}$ uma Rede Bayesiana, $Pr$ a distribuição de probabilidade
+induzida e $f$ a \textit{polynomial}. Para toda evidência $e$, temos que $f(e)=Pr(e)$.
+\end{spn-thm}
+
+\subsection{Circuit propagation}
+
+\paragraph{
+  Nesta subseção definiremos o que são derivadas parciais e sua utilidade em Redes Bayesianas.
+}
+
+\paragraph{
+  A derivada parcial de uma variável representa o quanto a mudança de uma variável impacta na saída
+final da rede. Portanto, seja $\lambda_{\overline{a}}=0$ e sua derivada parcial
+$\partial{f}/\partial{\lambda_{\overline{a}}} = 0.4$, e dada evidência $e=a\overline{c}$ e seja o
+valor final de $f(e)=0.1$, ao mudarmos o valor de $\lambda_{\overline{a}}=1$, estaremos na realidade
+mudando a evidência de $a\overline{c}$ para $\overline{c}$, e portanto teremos um valor final de
+0.5 ao invés de 0.1, que representa justamente $f(\overline{c})$. Como pode-se notar, ter a 
+derivada parcial evita termos de computar toda vez a rede, já que temos as diferenças no próprio
+circuito.
+}
+
+\paragraph{
+  Vamos definir uma notação de mudança de evidência. Sejam uma evidência $e$ e $X$ um conjunto
+de variáveis. Dizemos que $e-X$ é todos os elementos de $e$ menos aqueles que são equivalentes a
+qualquer elemento do conjunto $X$. Por exemplo, se $e=ab\overline{c}$, então $e-A=b\overline{c}$
+e $e-AC=b$.
+}
+
+\begin{spn-thm} Sejam $\mathcal{N}$ uma Rede Bayesiana, $Pr$ a distribuição de probabilidade, $f$ a
+\textit{network polynomial} e $\textbf{e}$ uma evidência qualquer. Para cada indicador $\lambda_x$ 
+temos que:
+\begin{equation}
+\frac{\partial{f}}{\partial{\lambda_x}}(\textbf{e}) = Pr(x, \textbf{e} - X)
+\end{equation}
+Além disso, para cada parâmetro $\theta_{x|\textbf{u}}$ temos que:
+\begin{equation}
+\theta_{x|\textbf{u}}\frac{\partial{f}}{\partial{\theta_{x|\textbf{u}}}}(\textbf{e})=Pr(x,\textbf{u},\textbf{e})
+\end{equation}
+Disso chega-se diretamente que:
+\begin{equation}
+\frac{\partial{f}}{\partial{\theta_{x|\textbf{u}}}}(\textbf{e})=\frac{Pr(x,\textbf{u},\textbf{e})}{\theta_{x|\textbf{u}}},
+\qquad \text{quando $\theta_{x|\textbf{u}} \neq 0$.}
+\end{equation}
+Essa derivada é mais comumente escrita como:
+\begin{equation}
+\frac{\partial{f}}{\partial{\theta_{x|\textbf{u}}}}(\textbf{e})=\frac{\partial{Pr(\textbf{e})}}{\partial{\theta_{x|\textbf{u}}}},
+\qquad \text{onde $Pr$ é a distribuição de $f$.}
+\end{equation}
+\end{spn-thm}
+
+\subsection{Evaluation and differentiation passes}
+
+\paragraph{
+  Na subseção 12.3.1 do livro vimos como implementar as passagens \textit{top-down} e 
+\textit{bottom-up}. Em seguida analisamos a complexidade das duas passagens. Não vamos citar os
+algoritmos neste relatório pois não é de muita importância para o projeto. No entanto, é 
+interessante citar as complexidades dos algoritmos.
+}
+
+\paragraph{
+  No algoritmo de \textit{bottom-up}, a complexidade em tempo foi linear ao tamanho do circuito, 
+onde o tamanho foi definido como o número de arestas no circuito.
+}
+
+\paragraph{
+  No algoritmo de \textit{top-down}, a princípio o algoritmo era linear se o número de nós crianças
+era limitado. Porém, no segundo algoritmo garantimos que fosse linear, já que se um nó era zero, 
+não guardávamos os nós crianças dele.
+}
+
+\section{Conclusão}
+
+\paragraph{
+  Estudou-se algumas notações em Redes Bayesianas que são indispensáveis para aprender Sum-Product
+Networks. Além disso, o estudo de \textit{network polynomial}, que é bastante presente em PGMs é
+um requerimento importante para SPNs. Além disso, adquiriu-se uma noção básica de circuitos
+aritméticos e de como implementa-los. Um outro ponto importante foi diferenciação parcial de 
+variáveis, que evita termos de passar várias vezes pelo circuito quando mudarmos a evidência.
 }
 
 \newpage
