@@ -96,7 +96,7 @@ outros Modelos Gráficos Probabilísticos (PGM).
 \begin{figure}[h]
 \centering\includegraphics[scale=0.5]{imgs/fig1.png}
 \caption{Uma Rede Bayesiana $A \to B$. Em Redes Bayesianas uma aresta representa uma dependência.
-  No caso da imagem $A$ depende de $B$. As CPTs associadas a esse grafo estão em Tabela 1 e 
+  No caso da imagem $B$ depende de $A$. As CPTs associadas a esse grafo estão em Tabela 1 e 
   Tabela 2.}
 \end{figure}
 
@@ -275,7 +275,7 @@ os parâmetros $\theta_{x|\textbf{u}}$ onde $x\textbf{u}$ seja consistente com $
 notação aplica-se a $\lambda_x \sim \textbf{z}$.
 }
 
-\begin{spn-def} Seja $\mathcal{N}$ uma Rede Bayesiana sobre variáveis $\mathbf{Z}$. Para cada 
+\begin{spn-def} Seja $\mathcal{N}$ uma Rede Bayesiana sob variáveis $\mathbf{Z}$. Para cada 
 variável $X$ com pais $\mathbf{U}$, chamamos de $\lambda_x$ o indicador de $x$ e 
 $\theta_{x|\textbf{u}}$ o parâmetro. A \textit{network polynomial} de $\mathcal{N}$ é definida como:
 \begin{equation}
@@ -351,8 +351,8 @@ onde o tamanho foi definido como o número de arestas no circuito.
 
 \paragraph{
   No algoritmo de \textit{top-down}, a princípio o algoritmo era linear se o número de nós crianças
-era limitado. Porém, no segundo algoritmo garantimos que fosse linear, já que se um nó era zero, 
-não guardávamos os nós crianças dele.
+era limitado. Porém, no segundo algoritmo garantimos que fosse linear sempre, já que se um nó era 
+zero, não guardávamos os nós crianças dele.
 }
 
 \section{Conclusão}
@@ -360,9 +360,9 @@ não guardávamos os nós crianças dele.
 \paragraph{
   Estudou-se algumas notações em Redes Bayesianas que são indispensáveis para aprender Sum-Product
 Networks. Além disso, o estudo de \textit{network polynomial}, que é bastante presente em PGMs é
-um requerimento importante para SPNs. Além disso, adquiriu-se uma noção básica de circuitos
+um requerimento importante para SPNs. Também adquiriu-se uma noção básica de circuitos
 aritméticos e de como implementa-los. Um outro ponto importante foi diferenciação parcial de 
-variáveis, que evita termos de passar várias vezes pelo circuito quando mudarmos a evidência.
+variáveis, que evita termos de passar várias vezes pelo circuito quando mudamos a evidência.
 }
 
 \newpage
