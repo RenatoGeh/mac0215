@@ -1,0 +1,104 @@
+\documentclass[a4paper,10pt]{article}
+
+\usepackage[brazilian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{titlesec}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage{amsthm}
+\usepackage[top=1.0in,bottom=1.0in]{geometry}
+\usepackage{hyperref}
+\usepackage[singlelinecheck=false]{caption}
+\usepackage[backend=biber,url=true,doi=true,eprint=false]{biblatex}
+
+\addbibresource{../common/references.bib}
+
+\newcommand\blfootnote[1]{%
+  \begingroup
+  \renewcommand\thefootnote{}\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \endgroup
+}
+
+\newcommand\defeq{\mathrel{\overset{\makebox[0pt]{\mbox{\normalfont\tiny\sffamily def}}}{=}}}
+
+\titleformat{\section}
+  {\normalfont\scshape\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}
+  {\normalfont\scshape\bfseries}{\thesubsection}{1em}{}
+\titleformat{\paragraph}
+  {\normalfont}{\theparagraph}{1em}{}
+\titleformat{\subparagraph}
+  {\normalfont}{\thesubparagraph}{1em}{}
+
+\captionsetup[table]{labelsep=space}
+
+\theoremstyle{plain}
+
+\newtheorem*{spn-def}{Definição}
+\newtheorem*{spn-thm}{Teorema}
+
+\title{\textbf{Modeling and Reasoning with Bayesian Networks: Inference by Variable Elimination 6.1-6.5}}
+
+\begin{document}
+\date{}
+\author{}
+\vspace*{-40pt}
+{\let\newpage\relax\maketitle}
+
+Relatório semana 2 - MAC0215 (Atividade Curricular em Pesquisa)
+
+Aluno: Renato Lui Geh (Bacharelado em Ciência da Computação)
+
+Orientador: Denis Deratani Mauá
+
+\section{Atividades realizadas na semana}
+
+\paragraph{
+  Durante a semana foram lidos os seguintes tópicos do livro \textit{Modeling and Reasoning with
+Bayesian Networks}\cite{bayes-net-darwiche}:
+}
+
+\begin{description}
+  \item[6] - Inference by Variable Elimination
+  \begin{description}
+    \item[6.1] - Introduction
+    \item[6.2] - The Process of Elimination
+    \item[6.3] - Factors
+    \item[6.4] - Elimination as a Basis for Inference
+    \item[6.5] - Computing Prior Marginals
+  \end{description}
+\end{description}
+
+\section{Definição das atividades}
+
+\paragraph{
+  Foi estudado o processo de eliminação de uma variável em uma Rede Bayesiana, simplificando a rede
+para computarmos inferência. Como tópicos importantes temos a definição de fatores 
+(\textit{factors}), as operações de soma (\textit{summing out}) e multiplicação de factors e como
+chegarmos em inferência e \textit{prior marginals} a partir de eliminação de variáveis.
+}
+
+\paragraph{
+  Esta seção será dividida em subseções para cada tópico que citamos no parágrafo anterior com a
+inclusão de um tópico de introdução para assuntos que foram pesquisados fora dos subcapítulos lidos
+e que não estão presentes nos outros relatórios. Abaixo está a lista de tópicos deste relatório.
+}
+
+\begin{enumerate}
+  \item Introdução
+  \item Factors
+  \item Summing out factors
+  \item Multiplying factors
+  \item Eliminação e propriedades
+  \item Computando prior marginals
+\end{enumerate}
+
+\subsection{Introdução}
+
+\newpage
+
+\printbibliography
+
+\end{document}

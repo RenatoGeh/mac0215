@@ -21,6 +21,8 @@
   \endgroup
 }
 
+\newcommand\defeq{\mathrel{\overset{\makebox[0pt]{\mbox{\normalfont\tiny\sffamily def}}}{=}}}
+
 \titleformat{\section}
   {\normalfont\scshape\bfseries}{\thesection}{1em}{}
 \titleformat{\subsection}
@@ -35,6 +37,7 @@
 \theoremstyle{plain}
 
 \newtheorem*{spn-def}{Definição}
+\newtheorem*{spn-thm}{Teorema}
 
 \title{\textbf{Title here}}
 
@@ -44,14 +47,14 @@
 \vspace*{-40pt}
 {\let\newpage\relax\maketitle}
 
+Relatório semana n - MAC0215 (Atividade Curricular em Pesquisa)
+
+Aluno: Renato Lui Geh (Bacharelado em Ciência da Computação)
+
+Orientador: Denis Deratani Mauá
+
 \newpage
 
-\section{Referências}
-
-\blfootnote{Os artigos listados na referência acima podem ser encontrados em: 
-  \url{http://www.ime.usp.br/~renatolg/mac0215/articles/}}
-
-\printbibliography[title={Artigos},type=article]
-\printbibliography[title={Websites},type=misc]
+\printbibliography
 
 \end{document}
