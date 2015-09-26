@@ -1,0 +1,256 @@
+\documentclass[a4paper,10pt]{article}
+
+\usepackage[brazilian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{titlesec}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage{amsthm}
+\usepackage[top=1.0in,bottom=1.0in]{geometry}
+\usepackage{hyperref}
+\usepackage[singlelinecheck=false]{caption}
+\usepackage[backend=biber,url=true,doi=true,eprint=false]{biblatex}
+\usepackage{enumitem}
+\usepackage[x11names, rgb]{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{snakes,arrows,shapes}
+
+\addbibresource{../common/references.bib}
+
+\newcommand\blfootnote[1]{%
+  \begingroup
+  \renewcommand\thefootnote{}\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \endgroup
+}
+
+\newcommand\defeq{\mathrel{\overset{\makebox[0pt]{\mbox{\normalfont\tiny\sffamily def}}}{=}}}
+
+\titleformat{\section}
+  {\normalfont\scshape\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}
+  {\normalfont\scshape\bfseries}{\thesubsection}{1em}{}
+\titleformat{\paragraph}
+  {\normalfont}{\theparagraph}{1em}{}
+\titleformat{\subparagraph}
+  {\normalfont}{\thesubparagraph}{1em}{}
+
+\captionsetup[table]{labelsep=space}
+
+\theoremstyle{plain}
+
+\newtheorem*{spn-def}{Definição}
+\newtheorem*{spn-thm}{Teorema}
+
+\title{\textbf{Modeling and Reasoning with Bayesian Networks: Inference by Variable Elimination 6.6-6.9}}
+
+\begin{document}
+\date{}
+\author{}
+\vspace*{-40pt}
+{\let\newpage\relax\maketitle}
+
+Relatório semana 5 - MAC0215 (Atividade Curricular em Pesquisa)
+
+Aluno: Renato Lui Geh (Bacharelado em Ciência da Computação)
+
+Orientador: Denis Deratani Mauá
+
+\section{Atividades realizadas na semana}
+
+\paragraph{
+  Durante a semana foram lidos os seguintes tópicos do livro \textit{Modeling and Reasoning with
+  Bayesian Networks}\cite{bayes-net-darwiche}:
+}
+
+\begin{description}
+  \item[6] - Inference by Variable Elimination
+  \begin{description}
+    \item[6.6] - Choosing an Elimination Order
+    \item[6.7] - Computing Posterior Marginals
+    \item[6.8] - Network Structure and Complexity
+    \item[6.9] - Query Structure and Complexity
+  \end{description}
+\end{description}
+
+\section{Definição das atividades}
+
+\paragraph{
+  Foram estudados como encontrar a melhor ordem de eliminação de variáveis\cite{report-2}, 
+  definimos o que são grafos de interação de Redes Bayesianas, como calcularmos marginais
+  posteriores (\textit{posterior marginals}), algumas propriedades da estrutura de uma rede e como 
+  podar (\textit{prune}) nós e arestas de uma Rede Bayesiana.
+}
+
+\paragraph{
+  Esta seção será dividida em subseções onde veremos os itens enumerados no parágrafo acima. A cada
+  tópico que não tenha sido apresentado ainda vamos abordar a teoria por trás e introduzir o 
+  assunto. Separaremos tais explicações em uma subsubseção equivalente. Abaixo está a lista de 
+  tópicos que iremos abordar.
+}
+
+\begin{enumerate}
+  \item Escolhendo uma ordem de eliminação
+    \begin{enumerate}[label*=\arabic*.]
+      \item Subgraphs, induced subgraphs, cliques e spanning subgraphs
+      \item Grafo de interação
+    \end{enumerate}
+  \item Computando posterior marginals
+    \begin{enumerate}[label*=\arabic*.]
+      \item Posterior marginals e joint marginals
+    \end{enumerate}
+  \item Estrutura e complexidade da rede
+    \begin{enumerate}[label*=\arabic*.]
+      \item NP-hard e NP-complete
+      \item Treewidth
+      \item Tree networks, polytrees, trees e multiply connected
+    \end{enumerate}
+  \item Pruning
+    \begin{enumerate}[label*=\arabic*.]
+      \item Pruning nodes
+      \item Pruning edges
+      \item Network pruning
+    \end{enumerate}
+\end{enumerate}
+
+\subsection{Escolhendo uma ordem de eliminação}
+
+\paragraph{
+  Como vimos no relatório anterior\cite{report-2}, queremos criar factors que sejam os menores 
+  possíveis. A ordem de eliminação que tiver menor $w$ será a melhor. Dizemos que o $w$ de uma 
+  ordem de eliminação é o maior $width$ de todos os factors da ordem de eliminação. 
+}
+
+\paragraph{
+  Antes de acharmos a melhor ordem de eliminação precisamos saber como calcular o $w$ de uma ordem.
+  Um jeito ingênuo de acharmos é, a cada interação $i$ de uma multiplicação e soma, acharmos o 
+  $w_i$ com respeito a $\pi(i)$. No final retornamos o maior $w_i$. 
+}
+
+\begin{table}[h]
+  \begin{center}
+    \begin{tabular}{*{4}{l|} l}
+      i & $\pi(i)$ & $\mathcal{S}$ & $f_i$ & $w$ \\
+      \hline
+      & & $\Theta_A \Theta_{B|A} \Theta_{C|A} \Theta_{D|BC} \Theta_{E|C}$ & & \\
+      & & & & \\
+      1 & B & $\Theta_A \Theta_{C|A} \Theta_{E|C} f_1(A, C, D)$ & $f_1 = \sum_B \Theta_{B|A} \Theta_{D|BC}$ & 3 \\
+      2 & C & $\Theta_A f_2(A, D, E)$ & $f_2 = \sum_C \Theta_{C|A} \Theta_{E|C} f_1(A, C, D)$ & 3 \\
+      3 & A & $f_3(D, E)$ & $f_3 = \sum_A \Theta_A f_2(A, D, E)$ & 2 \\
+      4 & D & $f_4(E)$ & $f_4 = \sum_D f_3(D, E)$ & 1 \\
+    \end{tabular}
+  \end{center}
+\end{table}
+
+\paragraph{
+  Na tabela acima a segunda coluna indica a variável $\pi(i)$ que queremos eliminar. A terceira 
+  coluna é o resultado da substituição de $\pi(i)$ pelo factor resultante na quarta coluna, onde
+  multiplicamos e somamos as CPTs onde $\pi(i)$ está presente. A última coluna é o $w_i$ de cada
+  eliminação. Pode-se ver que o $w$ dessa ordem é 3, já que é o maior $w$ entre todas as iterações.
+  Note que não precisamos realmente computar a eliminação das variáveis. De fato não fazemos tais
+  eliminações, mas a cada $\pi(i)$ que aparecem nos factors $f(\textbf{X}_k)$ substituímos tais
+  factors por um novo factor sob as variáveis $\cup_k \textbf{X}_k \setminus {\pi(i)}$.
+}
+
+\paragraph{
+  Um outro jeito de se achar a $width$ de uma ordem de eliminação é por meio de um grafo não 
+  direcionado que representa as interações das CPTs de uma Rede Bayesiana. Antes de definirmos
+  esse grafo vamos introduzir alguns conceitos fundamentais sobre grafos.
+}
+
+\subsubsection{Subgraphs, induced subgraphs, cliques e spanning subgraphs}
+
+\paragraph{
+  Vamos definir $V(G)$ como o conjunto de vértices do grafo G. Similarmente, $E(G)$ é o conjunto de
+  arestas do grafo $G$. Dizemos que um grafo é não direcionado se para cada vértice $x, y$ em $G$,
+  tanto $xy$ quanto $yx$ são arestas válidas em $G$.
+}
+
+\paragraph{
+  Primeiro vamos ver a definição de subgrafo:
+}
+
+\begin{spn-def} Um grafo $H$ é um subgrafo de $G$ se $V(H)$ é um subconjunto de $V(G)$ e $E(H)$ é
+  subconjunto de $E(G)$. Dizemos que $G$ é o supergrafo de $H$ se $H$ é subgrafo de $G$.
+\end{spn-def}
+
+\paragraph{
+  Vamos agora definir o que é um grafo induzido:
+}
+
+\begin{spn-def} Um subgrafo $H$ de um grafo $G$ é dito induzido se para cada par de vértices $x, y$
+  em $H$, $xy$ é uma aresta de $H$ se e somente se $xy$ é uma aresta em $G$. Ou seja, $H$ é 
+  um subgrafo induzido de $G$ se as arestas em $H$ são exatamente as arestas que aparecem em $G$ 
+  sob o mesmo conjunto de vértices. Se $V(H)$ é um subconjunto $S$ de $V(G)$, então $H$ pode ser
+  escrito como $G[S]$ e é dito ser induzido por $S$.
+\end{spn-def}
+
+\paragraph{
+  Agora iremos definir o que é a completude de um grafo:
+}
+
+\begin{spn-def} Dizemos que um grafo $G$ é completo se todo par de vértices distintos em $G$ é 
+  conectado por uma aresta única.
+\end{spn-def}
+
+\paragraph{
+  Definimos agora o que é um clique:
+}
+
+\begin{spn-def} Um clique é um subconjunto de vértices de um grafo não direcionado tal que o 
+  subgrafo induzido dele seja completo. Ou seja, todo par distinto de vértices em um clique é 
+  adjacente.
+\end{spn-def}
+
+\paragraph{
+  Vamos também definir o que é um \textit{spanning subgraph}:
+}
+
+\begin{spn-def} Dizemos que um subgrafo $H$ cobre (\textit{spans}) um grafo $G$ se ele tem mesmo
+  conjunto de vértices que $G$. $H$ é então dito o \textit{spanning subgraph} de $G$.
+\end{spn-def}
+
+\subsubsection{Grafo de interação}
+
+\paragraph{
+  Agora que temos uma noção básica sobre grafos podemos definir o grafo de interação.
+}
+
+\begin{spn-def} Seja $f_1,...,f_n$ o conjunto de factors. O \textit{grafo de interação} $G$ desses
+  factors é um grafo não direcionado construído de tal forma que os nós de $G$ são as variáveis que
+  aparecem nos factors $f_1,...,f_n$. Há uma aresta entre duas variáveis em $G$ se e somente se 
+  essas variáveis aparecem no mesmo factor.
+\end{spn-def}
+
+\paragraph{
+  Em outras palavras, as variáveis $\textbf{X}_i$ de cada factor $f_i$ formam um clique em $G$, ou
+  seja, as variáveis emparelhadas são adjacentes.
+}
+
+\begin{table}[h]
+  \begin{center}
+    \begin{tabular}{l | c}
+      $\mathcal{S}_1: \Theta_A \Theta_{B|A} \Theta_{C|A} \Theta_{D|BC} \Theta_{E|C}$ & \input{graphs/s1-content} \\
+      \hline
+      $\mathcal{S}_2: \Theta_A \Theta_{C|A} \Theta_{E|C} f_1(A, C, D)$ & \input{graphs/s2-content} \\
+      \hline
+      $\mathcal{S}_3: \Theta_A f_2(A, D, E)$ & \input{graphs/s3-content} \\
+      \hline
+      & \\
+      $\mathcal{S}_4: f_3(D, E)$ & \input{graphs/s4-content} \\
+      & \\
+      \hline
+      & \\
+      $\mathcal{S}_5: f_4(E)$ & \input{graphs/s5-content} \\
+      & \\
+    \end{tabular}
+  \end{center}
+\end{table}
+
+
+\newpage
+
+\printbibliography
+
+\end{document}
