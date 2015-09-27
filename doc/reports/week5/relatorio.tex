@@ -99,18 +99,22 @@ Orientador: Denis Deratani Mauá
   \item Computando posterior marginals
     \begin{enumerate}[label*=\arabic*.]
       \item Posterior marginals e joint marginals
+      \item Eliminação de variáveis e posterior marginals
     \end{enumerate}
   \item Estrutura e complexidade da rede
     \begin{enumerate}[label*=\arabic*.]
-      \item NP-hard e NP-complete
       \item Treewidth
-      \item Tree networks, polytrees, trees e multiply connected
+      \item Tree networks, polytrees e multiply connected
     \end{enumerate}
   \item Pruning
     \begin{enumerate}[label*=\arabic*.]
       \item Pruning nodes
       \item Pruning edges
       \item Network pruning
+    \end{enumerate}
+  \item Apêndice
+    \begin{enumerate}[label*=\arabic*.]
+      \item NP-hard e NP-complete
     \end{enumerate}
 \end{enumerate}
 
@@ -245,8 +249,325 @@ Orientador: Denis Deratani Mauá
       $\mathcal{S}_5: f_4(E)$ & \input{graphs/s5-content} \\
       & \\
     \end{tabular}
+    \caption{Grafo de interação resultante da eliminação das variáveis B, C, A, D nessa ordem.}
   \end{center}
 \end{table}
+
+\paragraph{
+  A Tabela 1 mostra como fica o grafo de interação ao eliminarmos as variáveis B, C, A, D nessa 
+  ordem. É importante notar que:
+}
+
+\begin{enumerate}
+  \item Se $G$ é o grafo de interação dos factors $\mathcal{S}$, então eliminar a variável $\pi(i)$
+    de $\mathcal{S}$ leva a construção de um factor sob os vizinhos de $\pi(i)$ em $G$. Por exemplo,
+    eliminar a variável $B$ do factor $\mathcal{S}_1$ da Tabela 1 gera um factor sob as variáveis
+    $A$, $C$, $D$, que são os vizinhos de $B$ no grafo de interação.
+  \item Seja $\mathcal{S}'$ os factors que resultam da eliminação da variável $\pi(i)$ dos factors
+    $\mathcal{S}$. Se $G'$ e $G$ são os grafos de interação de $\mathcal{S}'$ e $\mathcal{S}$
+    respectivamente, então $G'$ pode ser obtido de $G$ da seguinte forma:
+    \begin{enumerate}
+      \item Adicione uma aresta em $G$ entre cada par de vizinhos da variável $\pi(i)$ que não 
+        estejam já conectados por uma aresta.
+      \item Remova a variável $\pi(i)$ de $G$.
+    \end{enumerate}
+\end{enumerate}
+
+\paragraph{
+  Pode-se ver que (a) corresponde a multiplicar os factors que contém a variável $\pi(i)$ em 
+  $\mathcal{S}$ e (b) equivale a somar a variável $\pi(i)$ do factor resultante.
+}
+
+\paragraph{
+  Computar a \textit{width} de uma ordem é útil quando temos um número pequeno de ordens. No
+  entanto, quando temos um número muito grande de ordens precisamos achar uma ordem ótima de um
+  jeito melhor. Achar uma ordem ótima é NP-difícil (\textit{NP-hard}), mas podemos usar várias
+  heurísticas que resultam em boas ordens.
+}
+
+\paragraph{
+  Uma das heurísticas mais populares é a \textit{min-degree}: sempre elimine a variável que 
+  acarreta na construção do menor factor possível. Se usarmos o grafo de interação podemos ver que
+  a heurística diz que devemos eliminar a variável que tem o menor número de vizinhos no grafo de
+  interação atual. A min-degree é ótima para redes que possuem uma ordem de eliminação de 
+  \textit{width} $\leq$ 2.
+}
+
+\paragraph{
+  Outra heurística que na maioria das vezes é mais efetiva que a min-degree é a \textit{min-fill},
+  onde nós eliminamos a variável de tal forma que precisemos adicionar o menor número possível de
+  arestas no grafo de interação.
+}
+
+\subsection{Computando posterior marginals}
+
+\paragraph{
+  Vamos mostrar agora como computar posterior marginals a partir de eliminação de variáveis. Mas
+  primeiro vamos definir o que é posterior marginal e joint marginals.
+}
+
+\subsubsection{Posterior marginals e joint marginals}
+
+\paragraph{
+  Dada uma distribuição de probabilidade conjunta\cite{project-def} $Pr(x_1,...,x_n)$ a 
+  distribuição marginal $Pr(x_1,...,x_m), m \leq n$ é definida como:
+}
+
+\begin{equation}
+  Pr(x_1,...,x_m) = \sum_{x_{m+1},...,x_n} Pr(x_1,...,x_n)
+\end{equation}
+
+\paragraph{
+  Ou seja, a distribuição marginal pode ser vista como uma \textit{projeção} da distribuição
+  conjunta num conjunto menor $X_1,...,X_m$.
+}
+
+\paragraph{
+  Quando a distribuição marginal é computada dada uma evidência $\textbf{e}$,
+}
+ 
+\begin{equation}
+  Pr(x_1,...,x_m|\textbf{e}) = \sum_{x_{m+1},...,x_n} Pr(x_1,...,x_n|\textbf{e}),
+\end{equation}
+
+\paragraph{
+  Então dizemos que ela é uma \textit{posterior marginal}. Quando uma distribuição marginal não é
+  dada nenhuma evidência, então dizemos que ela é uma \textit{prior marginal}.
+}
+
+\paragraph{
+  Vamos agora definir uma marginal conjunta (\textit{joint marginal}). Uma joint marginal é uma
+  variação da posterior marginal da forma $P(\textbf{Q}, \textbf{e})$. Ou seja, ao invés de 
+  computarmos a probabilidade de \textbf{q} dado \textbf{e}, $Pr(\textbf{q}, \textbf{e})$, nós
+  computamos a probabilidade de \textbf{q} e \textbf{e}, $Pr(\textbf{q}, \textbf{e})$. Por exemplo,
+  tomemos as Tabelas 2 e 3 dados $\textbf{Q} = \{D, E\}$ e $\textbf{e}: A = true, B = false$ na
+  mesma rede da Tabela 1:
+}
+
+\begin{table}[h]
+  \begin{center}
+    \captionsetup{justification=centering}
+    \begin{tabular}{*{2}{l} | l}
+      D & E & $Pr(\textbf{Q} | \textbf{e})$ \\
+      \hline
+      true & true & 0.448 \\
+      true & false & 0.192 \\
+      false & true & 0.112 \\
+      false & false & 0.248 \\
+    \end{tabular}
+    \quad
+    \quad
+    \begin{tabular}{*{2}{l} | l}
+      D & E & $Pr(\textbf{Q}, \textbf{e})$ \\
+      \hline
+      true & true & 0.21504 \\
+      true & false & 0.09216 \\
+      false & true & 0.05376 \\
+      false & false & 0.11904 \\
+    \end{tabular}
+    \caption*{Tabelas 2 e 3 Posterior marginal e joint marginal respectivamente.}
+  \end{center}
+\end{table}
+\setcounter{table}{3}
+
+\paragraph{
+  A terceira linha da Tabela 3 (joint marginal) diz que:
+}
+
+\begin{equation}
+  Pr(D = false, E = true, A = true, B = false) = 0.05376
+\end{equation}
+
+\paragraph{
+  Ao somarmos todas as probabilidades da joint marginal nesse factor, teremos como resultado 0.48,
+  que é a probabilidade de evidência $\textbf{e}: A = true, B = false$. Se somarmos todas as 
+  probabilidades que aparecem na joint marginal, teremos sempre a probabilidade da evidência 
+  \textbf{e}. Isso quer dizer que podemos computar a posterior marginal $Pr(\textbf{Q}|\textbf{e})$
+  normalizando a joint marginal $Pr(\textbf{Q}, \textbf{e})$.
+}
+
+\subsubsection{Eliminação de variáveis e posterior marginals}
+
+\paragraph{
+  Podemos usar eliminação de variáveis para computar joint marginals se zerarmos todas as linhas
+  na distribuição de probabilidade conjunta onde há uma inconsistência\cite{report-2} com a 
+  evidência \textbf{e}. Mais formalmente dizemos que:
+}
+
+\begin{spn-def} A redução de um factor $f(\textbf{X})$ dado uma evidência \textit{e} é um outro
+  factor sob as variáveis \textbf{X} denotado por $f^{\textbf{e}}$ e definido como:
+  \begin{equation}
+    f^{\textbf{e}}(\textbf{x}) \defeq 
+    \begin{cases}
+      f(\textbf{x}), & \text{se $\textbf{x} \sim \textbf{e}$} \\
+      0, & \text{caso contrário.} \\
+    \end{cases}
+  \end{equation}
+\end{spn-def}
+
+\paragraph{
+  Portanto, dado o factor da Tabela 2 e evidência $\textbf{e}: E = true$, teríamos:
+}
+
+\begin{table}[h]
+  \begin{center}
+    \begin{tabular}{*{2}{l} | l}
+      D & E & $f^\textbf{e}$ \\
+      \hline
+      true & true & 0.448 \\
+      true & false & 0 \\
+      false & true & 0.112 \\
+      false & false & 0 \\
+    \end{tabular}
+  \end{center}
+\end{table}
+
+\newpage
+
+\paragraph{
+  Para facilitar omitimos todas as linhas zeradas:
+}
+
+\begin{table}[h]
+  \begin{center}
+    \begin{tabular}{*{2}{l} | l}
+      D & E & $f^\textbf{e}$ \\
+      \hline
+      true & true & 0.448 \\
+      false & true & 0.112 \\
+    \end{tabular}
+  \end{center}
+\end{table}
+
+\paragraph{
+  Dado $\textbf{Q} = \{D, E\}$ e $\textbf{e}: A = true, B = false$, a marginal conjunta 
+  $Pr(\textbf{Q}, \textbf{e})$ pode ser computada como:
+}
+
+\begin{equation}
+  Pr(\textbf{Q}, \textbf{e}) = \sum_{A, B, C} (\Theta_{E|C} \Theta_{D|BC} \Theta_{C|A} \Theta_{B|A} \Theta_A)^\textbf{e}
+\end{equation}
+
+\paragraph{
+  Como pode-se ver, ainda temos o problema da complexidade, já que precisamos multiplicar todas as
+  CPTs para depois eliminar as variáveis. No entanto, podemos aplicar o seguinte teorema:
+}
+
+\begin{spn-thm} Se $f_1$ e $f_2$ são dois factors e $\textbf{e}$ é uma instância, então:
+  \begin{equation}
+    (f_1f_2)^\textbf{e} = f_1^\textbf{e}f_2^\textbf{e}
+  \end{equation}
+\end{spn-thm}
+
+\paragraph{
+  Portanto podemos reduzir para:
+}
+
+\begin{equation}
+  Pr(\textbf{Q} = \{D, E\}, \textbf{e}) = \sum_{A, B, C} \Theta_{E|C}^\textbf{e} \Theta_{D|BC}^\textbf{e}
+    \Theta_{C|A}^\textbf{e} \Theta_{B|A}^\textbf{e} \Theta_A^\textbf{e}
+\end{equation}
+
+\paragraph{
+  Essa forma mantém a distribuição de probabilidade conjunta em forma fatorada e portanto permite
+  eliminarmos as variáveis nas CPTs reduzidas.
+}
+
+\paragraph{
+  Para calcularmos a posterior marginal $Pr(C|A=true)$, dados:
+}
+
+\begin{equation}
+  \begin{split}
+    Pr(C=true, A=true) = 0.192 \\
+    Pr(C=false, A=true) = 0.408 \\
+    Pr(A=true) = 0.600 
+  \end{split}
+\end{equation}
+
+\paragraph{
+  Precisamos normalizar o factor, ou seja:
+}
+
+\begin{table}[h]
+  \begin{center}
+    \begin{tabular}{l | l}
+      C & $Pr(C|A=true)$ \\
+      \hline
+      true & 0.32 \\
+      false & 0.68 \\
+    \end{tabular}
+  \end{center}
+\end{table}
+
+\paragraph{
+  Portanto $Pr(C=true|A=true) = 0.32$ e $Pr(C=false|A=true) = 0.68$.
+}
+
+\paragraph{
+  Note que se tentarmos calcular $Pr(\textbf{Q}|\textbf{e})$ com \textbf{Q} vazio, estaremos
+  calculando um factor trivial com valor igual a probabilidade de evidência \textbf{e}.
+}
+
+\subsection{Estrutura e complexidade da rede}
+
+\paragraph{
+  Apesar de termos duas Redes Bayesianas com o mesmo número de variáveis, as ordens de eliminação
+  ótimas de cada uma podem ser diferentes entre si. Isso por causa da \textit{treewidth} das redes.
+  Vamos definir o que é uma treewidth, falar sobre NP-completude e NP-dificuldade e em seguida
+  classificar as várias estruturas que uma rede pode ter. 
+}
+
+\subsubsection{Treewidth}
+
+\paragraph{
+  Definimos como treewidth o número que quantifica o quanto uma rede se assemelha à estrutura de 
+  uma árvore. Em particular, quanto mais similar a uma árvore, menor o seu treewidth. 
+}
+
+\paragraph{
+  Um ponto importante sobre treewidth é que nao há nenhuma ordem de eliminação completa onde sua
+  \textit{width} é menor que a treewidth da rede. Adicionalmente, existe uma ordem de eliminação
+  cuja \textit{width} é igual à treewidth da rede e ela é ótima. No entanto, determinar tal ordem é 
+  NP-difícil. Discutiremos mais sobre isso no Apêndice deste relatório.
+}
+
+\paragraph{
+  Vamos descrever algumas características da treewidth:
+}
+
+\begin{itemize}
+  \item O número de nós não tem efeito na treewidth.
+  \item O número de pais por nó tem efeito direto na treewidth. Se um número de pais por nó chega
+    $k$, então o treewidth não é menor que $k$.
+  \item Loops tendem a aumentar a treewidth.
+  \item O número de loops não tem efeito na treewidth. As interações geradas pelo loop tem efeito
+    direto na treewidth.
+\end{itemize}
+
+\paragraph{
+  Vamos agora falar sobre algumas classes de redes com treewidths conhecidas.
+}
+
+\subsubsection{Tree networks, polytrees e multiply connected}
+
+\paragraph{
+  \textit{Polytree networks}, também conhecidas como \textit{singly connected networks} são redes
+  onde há no máximo um caminho (não direcionado) entre qualquer dois nós. A treewidth dessas redes
+  é $k$, onde $k$ é o número máximo de pais que qualquer nó pode ter.
+}
+
+\paragraph{
+  \textit{Tree networks} são polytrees onde cada nó tem no máximo um pai, e portanto sua treewidth
+  é no máximo 1.
+}
+
+\paragraph{
+  \textit{Multiply connected} são aquelas que não são singly connected.
+}
+
+\subsection{Pruning}
+
 
 
 \newpage

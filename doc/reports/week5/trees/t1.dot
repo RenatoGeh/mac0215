@@ -1,0 +1,5 @@
+digraph{
+  A -> B -> D
+  A -> C -> E
+  C -> D
+}
