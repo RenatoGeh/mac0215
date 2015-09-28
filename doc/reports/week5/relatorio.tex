@@ -568,7 +568,61 @@ Orientador: Denis Deratani Mauá
 
 \subsection{Pruning}
 
+\paragraph{
+  Queremos aplicar transformações na estrutura da rede de tal forma que melhoramos como achamos
+  inferência e ao mesmo tempo preservando a joint marginal $Pr(\textbf{Q}, \textbf{e})$ e portanto
+  a prior e posterior marginals.
+}
 
+\paragraph{
+  Uma dessas transformações é chamada de \textit{pruning} (corte). Vamos nos referir à ação de 
+  pruning (\textit{to prune}) como \textit{aparar}. Quando nos referimos ao substantivo pruning
+  vamos usar a tradução \textit{corte}.
+}
+
+\subsubsection{Pruning nodes}
+
+\paragraph{
+  Dada uma Rede Bayesiana $\mathcal{N}$ e query $(\textbf{Q}, \textbf{e})$, podemos remover 
+  qualquer nó folha $\mathcal{L}$ (junto com sua CPT) desde que $\mathcal{L} \notin (\mathbf{Q} 
+  \cup \mathbf{E})$ e não afete a habilidade da rede de computar a query corretamente. Podemos 
+  aplicar essa transformação iterativamente, aparando vários nós. Denominamos o resultado de se 
+  remover as folhas nós do jeito citado como $pruneNodes(\mathcal{N}, \mathbf{Q} \cup \mathbf{E})$.
+}
+
+\begin{spn-thm} Seja uma Rede Bayesiana $\mathcal{N}$ e uma query $(\mathbf{Q}, \mathbf{e})$. Se
+  $\mathcal{N}' = pruneNodes(\mathcal{N}, \mathbf{Q} \cup \mathbf{E})$, então $Pr(\mathbf{Q},
+  \mathbf{e}) = Pr'(\mathbf{Q}, \mathbf{e})$, onde $Pr$ e $Pr'$ são as distribuições de 
+  probabilidade induzidas pelas redes $\mathcal{N}$ e $\mathcal{N}'$ respectivamente.
+\end{spn-thm}
+
+\begin{table}[h]
+  \begin{center}
+    \captionsetup{justification=centering}
+    \begin{tabular}{c c c}
+      \input{trees/t1-content} & \input{trees/t2-content} & \input{trees/t3-content} \\
+      Estrutura da rede & Junção em $B$, $E$ & Junção em $B$ \\
+    \end{tabular}
+    \caption{Aparando nós na rede dados duas queries diferentes.}
+  \end{center}
+\end{table}
+
+\paragraph{
+  A Tabela 4 mostra a rede com dois cortes. No primeiro queremos a marginal sob $B$ e $E$ sem 
+  nenhuma evidência. Portanto aparamos a folha $D$. Depois deste corte não podemos aparar nenhuma
+  outra folha nó, já que todas aparecem na query. Na segunda queremos a marginal sob a variável $B$
+  sem evidência. Aparamos $D$ e $E$, mas assim fazemos este corte podemos em seguida aparar o nó
+  $C$, já que ele não aparece na query. Note que a primeira figura da Tabela 4 tem treewidth 2, 
+  enquanto que as treewidth da segunda e terceira figuras são 1.
+}
+
+\paragraph{
+  Se as variáveis $\mathbf{Q} \cup \mathbf{E}$ forem próximas das raízes da rede então elas reduzem 
+  significantemente a treewidth da rede. No pior dos casos todas as folhas aparecem em $\mathbf{Q}
+  \cup \mathbf{E}$ e portanto nenhum corte é possível. No melhor dos casos as variáveis $\mathbf{Q}
+  \cup \mathbf{E}$ contêm somente nós raízes, permitindo o corte de todos os nós exceto os que
+  pertencem a $\mathbf{Q} \cup \mathbf{E}$.
+}
 
 \newpage
 
