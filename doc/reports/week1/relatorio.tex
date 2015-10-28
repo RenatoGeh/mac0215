@@ -75,13 +75,13 @@ Bayesian Networks}\cite{bayes-net-darwiche}:
 \section{Definição das atividades}
 
 \paragraph{
-  Foram estudados o processo de se compilar Redes Bayesianas em circuitos aritméticos, algumas 
-notações usadas em Redes Bayesianas, a definição de uma \textit{network polynomial}, algumas 
+  Foram estudados o processo de se compilar Redes Bayesianas em circuitos aritméticos, algumas
+notações usadas em Redes Bayesianas, a definição de uma \textit{network polynomial}, algumas
 propriedades de Redes Bayesianas e diferenciação de uma rede a partir de uma evidência.
 }
 
 \paragraph{
-  Esta seção será dividida em subseções para cada subtópico citado na seção anterior. Cada 
+  Esta seção será dividida em subseções para cada subtópico citado na seção anterior. Cada
 subseção é um resumo do que foi estudado em cada tópico, contendo os assuntos mais importantes
 para o projeto.
 }
@@ -96,7 +96,7 @@ outros Modelos Gráficos Probabilísticos (PGM).
 \begin{figure}[h]
 \centering\includegraphics[scale=0.5]{imgs/fig1.png}
 \caption{Uma Rede Bayesiana $A \to B$. Em Redes Bayesianas uma aresta representa uma dependência.
-  No caso da imagem $B$ depende de $A$. As CPTs associadas a esse grafo estão em Tabela 1 e 
+  No caso da imagem $B$ depende de $A$. As CPTs associadas a esse grafo estão em Tabela 1 e
   Tabela 2.}
 \end{figure}
 
@@ -141,7 +141,7 @@ uma evidência. Mais formalmente dizemos que:
 }
 
 \begin{spn-def} Sejam $X_1,...,X_n$ as variáveis da rede e $e$ a evidência dada. Existe uma
-  instância $x_1,...,x_n$ onde $Pr(x_1,...,x_n|e)$ é maximal. Chamamos $x_1,...,x_n$ a 
+  instância $x_1,...,x_n$ onde $Pr(x_1,...,x_n|e)$ é maximal. Chamamos $x_1,...,x_n$ a
   \textit{explicação mais provável} (\textit{most probable explanation}) dado $e$.
 \end{spn-def}
 
@@ -161,21 +161,21 @@ variáveis da rede.
 }
 
 \paragraph{
-  Agora que temos uma base podemos voltar para circuitos aritméticos. Dado um circuito aritmético 
-que representa uma Rede Bayesiana, teremos dois tipos de entradas: variáveis $\theta$, que 
-chamaremos de \textit{parâmetros}, e as variáveis $\lambda$, que chamaremos de 
+  Agora que temos uma base podemos voltar para circuitos aritméticos. Dado um circuito aritmético
+que representa uma Rede Bayesiana, teremos dois tipos de entradas: variáveis $\theta$, que
+chamaremos de \textit{parâmetros}, e as variáveis $\lambda$, que chamaremos de
 \textit{indicadores}. Parâmetros são valorados de acordo com a CPT da rede, enquanto indicadores
 são valorados de acordo com a evidência. Nas próximas subseções veremos que podemos ter duas
-passagens pelo circuito. Uma em que vamos de baixo para cima (bottom-up) para calcular a 
+passagens pelo circuito. Uma em que vamos de baixo para cima (bottom-up) para calcular a
 probabilidade de uma dada evidência, e outra em que vamos de cima para baixo (top-down), chamada
-de \textit{differentiation pass} para calcularmos as derivadas parciais de cada entrada do 
+de \textit{differentiation pass} para calcularmos as derivadas parciais de cada entrada do
 circuito.
 }
 
 \subsection{Circuit semantics}
 
 \paragraph{
-  Ao compilarmos um circuito aritmético de uma Rede Bayesiana estamos representando, de forma 
+  Ao compilarmos um circuito aritmético de uma Rede Bayesiana estamos representando, de forma
 compacta, a distribuição de probabilidade induzida da rede. No caso da Figura 1, a distribuição de
 probabilidade está representada na Tabela 3.
 }
@@ -223,29 +223,29 @@ $\overline{a}$ & $\overline{b}$ & $\lambda_{\overline{a}}\lambda_{\overline{b}}\
 }
 
 \begin{equation}
-f = \lambda_{a}\lambda_{b}\theta_{a}\theta_{b|a} + 
+f = \lambda_{a}\lambda_{b}\theta_{a}\theta_{b|a} +
   \lambda_{a}\lambda_{\overline{b}}\theta_{a}\theta_{\overline{b}|a} +
-  \lambda_{\overline{a}}\lambda_{b}\theta_{\overline{a}}\theta_{b|\overline{a}} +  
+  \lambda_{\overline{a}}\lambda_{b}\theta_{\overline{a}}\theta_{b|\overline{a}} +
   \lambda_{\overline{a}}\lambda_{\overline{b}}\theta_{\overline{a}}\theta_{\overline{b}|\overline{a}}
 \end{equation}
 
 \paragraph{
-  Chamamos a função $f$ de \textit{network polynomial}, que representa a distribuição de 
+  Chamamos a função $f$ de \textit{network polynomial}, que representa a distribuição de
 probabilidade da rede na Figura 1. Para computar a probabilidade dada qualquer evidência $e$,
 definimos cada variável indicadora de forma consistente com a evidência. Vamos definir o que
 significa definir uma variável de forma consistente com uma evidência:
 }
 
-\begin{spn-def} Sejam um conjunto $X=\{x_1,...,x_n,\overline{x}_1,...,\overline{x}_n\}$ das 
-variáveis da rede e uma evidência $e=\{e_p,...,e_q\}$. Dizemos que $X$ está consistente com $e$ 
-quando para cada $e_i$, se $e_i=1$ então $x_i=1$ e $\overline{x}_i=0$; e se $e_i=0$ então $x_i=0$ 
+\begin{spn-def} Sejam um conjunto $X=\{x_1,...,x_n,\overline{x}_1,...,\overline{x}_n\}$ das
+variáveis da rede e uma evidência $e=\{e_p,...,e_q\}$. Dizemos que $X$ está consistente com $e$
+quando para cada $e_i$, se $e_i=1$ então $x_i=1$ e $\overline{x}_i=0$; e se $e_i=0$ então $x_i=0$
 e $\overline{x}_i=1$. Para todo $j$ tal que $1\leq{j}\leq{n}$ e que não exista um $e_j \in e$
-definiremos $x_j=\overline{x}_j=1$. Por questões de visibilidade, definimos $x_i, \overline{x}_i$
-ao invés de $\lambda_{i}, \lambda_{\overline{i}}$, porém ambas as notações são equivalentes.
+definiremos $x_j=\overline{x}_j=1$. Por questões de visibilidade, definimos $(x_i, \overline{x}_i)$
+ao invés de $(\lambda_{i}, \lambda_{\overline{i}})$, porém as notações são equivalentes.
 \end{spn-def}
 
 \paragraph{
-  Portanto, se por exemplo tivermos evidência $e=\overline{a}$, teremos na \textit{network 
+  Portanto, se por exemplo tivermos evidência $e=\overline{a}$, teremos na \textit{network
 polynomial} da Figura 1 os seguintes indicadores: $\lambda_{a}=0, \lambda_{\overline{a}}=1,
 \lambda_{b}=1, \lambda_{\overline{b}}=1$. Neste exemplo, o valor de $f$ seria:
 }
@@ -253,7 +253,7 @@ polynomial} da Figura 1 os seguintes indicadores: $\lambda_{a}=0, \lambda_{\over
 \begin{equation}
 \begin{split}
 f(\textbf{e}=\overline{a}) & = (0)(1)\theta_{a}\theta_{b|a} + (0)(1)\theta_{a}\theta_{\overline{b}|a} +
-  (1)(1)\theta_{\overline{a}}\theta_{b|\overline{a}} + 
+  (1)(1)\theta_{\overline{a}}\theta_{b|\overline{a}} +
   (1)(1)\theta_{\overline{a}}\theta_{\overline{b}|\overline{a}} \\
 & = \theta_{\overline{a}}\theta_{b|\overline{a}} + \theta_{\overline{a}}\theta_{\overline{b}|\overline{a}} \\
 & = Pr(\textbf{e})
@@ -269,19 +269,19 @@ casos $f$ não pode ser limitado, enquanto que o circuito pode.
 \paragraph{
   Vamos definir formalmente uma \textit{network polynomial}, mas antes vamos definir algumas
 notações. Dizemos que $\theta_{x|\textbf{u}} \sim \textbf{z}$ para dizer que $x\textbf{u}$ é
-consistente com $\textbf{z}, x\textbf{u} \sim \textbf{z}$. Portanto, 
+consistente com $\textbf{z}, x\textbf{u} \sim \textbf{z}$. Portanto,
 $\prod_{\theta_{x|\textbf{u}} \sim \textbf{z}} \theta_{x|\textbf{u}}$ denota o produto de todos
 os parâmetros $\theta_{x|\textbf{u}}$ onde $x\textbf{u}$ seja consistente com $\textbf{z}$. A mesma
 notação aplica-se a $\lambda_x \sim \textbf{z}$.
 }
 
-\begin{spn-def} Seja $\mathcal{N}$ uma Rede Bayesiana sob variáveis $\mathbf{Z}$. Para cada 
-variável $X$ com pais $\mathbf{U}$, chamamos de $\lambda_x$ o indicador de $x$ e 
+\begin{spn-def} Seja $\mathcal{N}$ uma Rede Bayesiana sob variáveis $\mathbf{Z}$. Para cada
+variável $X$ com pais $\mathbf{U}$, chamamos de $\lambda_x$ o indicador de $x$ e
 $\theta_{x|\textbf{u}}$ o parâmetro. A \textit{network polynomial} de $\mathcal{N}$ é definida como:
 \begin{equation}
 f \defeq \sum_x \prod_{\theta_{x|\textbf{u}} \sim \textbf{z}} \theta_{x|\textbf{u}} \prod_{\lambda_x \sim \textbf{z}} \lambda_x.
 \end{equation}
-O valor da \textit{network polynomial} $f$ com evidência $e$ é o resultado da função $f(e)$ 
+O valor da \textit{network polynomial} $f$ com evidência $e$ é o resultado da função $f(e)$
 substituindo cada indicador $\lambda_x$ em $f$ com um valor consistente com $e$.
 \end{spn-def}
 
@@ -301,7 +301,7 @@ final da rede. Portanto, seja $\lambda_{\overline{a}}=0$ e sua derivada parcial
 $\partial{f}/\partial{\lambda_{\overline{a}}} = 0.4$, e dada evidência $e=a\overline{c}$ e seja o
 valor final de $f(e)=0.1$, ao mudarmos o valor de $\lambda_{\overline{a}}=1$, estaremos na realidade
 mudando a evidência de $a\overline{c}$ para $\overline{c}$, e portanto teremos um valor final de
-0.5 ao invés de 0.1, que representa justamente $f(\overline{c})$. Como pode-se notar, ter a 
+0.5 ao invés de 0.1, que representa justamente $f(\overline{c})$. Como pode-se notar, ter a
 derivada parcial evita termos de computar toda vez a rede, já que temos as diferenças no próprio
 circuito.
 }
@@ -314,7 +314,7 @@ e $e-AC=b$.
 }
 
 \begin{spn-thm} Sejam $\mathcal{N}$ uma Rede Bayesiana, $Pr$ a distribuição de probabilidade, $f$ a
-\textit{network polynomial} e $\textbf{e}$ uma evidência qualquer. Para cada indicador $\lambda_x$ 
+\textit{network polynomial} e $\textbf{e}$ uma evidência qualquer. Para cada indicador $\lambda_x$
 temos que:
 \begin{equation}
 \frac{\partial{f}}{\partial{\lambda_x}}(\textbf{e}) = Pr(x, \textbf{e} - X)
@@ -338,20 +338,20 @@ Essa derivada é mais comumente escrita como:
 \subsection{Evaluation and differentiation passes}
 
 \paragraph{
-  Na subseção 12.3.1 do livro vimos como implementar as passagens \textit{top-down} e 
+  Na subseção 12.3.1 do livro vimos como implementar as passagens \textit{top-down} e
 \textit{bottom-up}. Em seguida analisamos a complexidade das duas passagens. Não vamos citar os
-algoritmos neste relatório pois não é de muita importância para o projeto. No entanto, é 
+algoritmos neste relatório pois não é de muita importância para o projeto. No entanto, é
 interessante citar as complexidades dos algoritmos.
 }
 
 \paragraph{
-  No algoritmo de \textit{bottom-up}, a complexidade em tempo foi linear ao tamanho do circuito, 
+  No algoritmo de \textit{bottom-up}, a complexidade em tempo foi linear ao tamanho do circuito,
 onde o tamanho foi definido como o número de arestas no circuito.
 }
 
 \paragraph{
   No algoritmo de \textit{top-down}, a princípio o algoritmo era linear se o número de nós crianças
-era limitado. Porém, no segundo algoritmo garantimos que fosse linear sempre, já que se um nó era 
+era limitado. Porém, no segundo algoritmo garantimos que fosse linear sempre, já que se um nó era
 zero, não guardávamos os nós crianças dele.
 }
 
@@ -361,7 +361,7 @@ zero, não guardávamos os nós crianças dele.
   Estudou-se algumas notações em Redes Bayesianas que são indispensáveis para aprender Sum-Product
 Networks. Além disso, o estudo de \textit{network polynomial}, que é bastante presente em PGMs é
 um requerimento importante para SPNs. Também adquiriu-se uma noção básica de circuitos
-aritméticos e de como implementa-los. Um outro ponto importante foi diferenciação parcial de 
+aritméticos e de como implementa-los. Um outro ponto importante foi diferenciação parcial de
 variáveis, que evita termos de passar várias vezes pelo circuito quando mudamos a evidência.
 }
 

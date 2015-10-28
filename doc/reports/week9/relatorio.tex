@@ -1,0 +1,117 @@
+\documentclass[a4paper,10pt]{article}
+
+\usepackage[brazilian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{titlesec}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage{amsthm}
+\usepackage[top=1.0in,bottom=1.0in]{geometry}
+\usepackage{hyperref}
+\usepackage[singlelinecheck=false]{caption}
+\usepackage[backend=biber,url=true,doi=true,eprint=false]{biblatex}
+\usepackage{enumitem}
+\usepackage[x11names, rgb]{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{snakes,arrows,shapes}
+
+\addbibresource{../common/references.bib}
+
+\newcommand\blfootnote[1]{%
+  \begingroup
+  \renewcommand\thefootnote{}\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \endgroup
+}
+
+\newcommand\defeq{\mathrel{\overset{\makebox[0pt]{\mbox{\normalfont\tiny\sffamily def}}}{=}}}
+
+\titleformat{\section}
+  {\normalfont\scshape\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}
+  {\normalfont\scshape\bfseries}{\thesubsection}{1em}{}
+\titleformat{\paragraph}
+  {\normalfont}{\theparagraph}{1em}{}
+\titleformat{\subparagraph}
+  {\normalfont}{\thesubparagraph}{1em}{}
+
+\captionsetup[table]{labelsep=space}
+
+\theoremstyle{plain}
+
+\newtheorem*{spn-def}{Definição}
+\newtheorem*{spn-thm}{Teorema}
+
+\title{\textbf{Uma Introdução a Sum-Product Networks}}
+
+\begin{document}
+\date{}
+\author{}
+\vspace*{-40pt}
+{\let\newpage\relax\maketitle}
+
+Relatório semana 9 - MAC0215 (Atividade Curricular em Pesquisa)
+
+Aluno: Renato Lui Geh (Bacharelado em Ciência da Computação)
+
+Orientador: Denis Deratani Mauá
+
+\section{Atividades realizadas na semana}
+
+\paragraph{
+  Durante a semana foram lidos as seguintes partes dos papers abaixo:
+}
+
+\begin{itemize}
+  \item \textit{Learning the Structure of Sum-Product Networks}, [R. Gens, P. Domingos]
+    \cite{gens-domingos}
+    \begin{itemize}
+      \item Introduction
+      \item Sum-Product Networks
+    \end{itemize}
+  \item \textit{Sum-Product Networks: A New Deep Architecture}, [H. Poon, P. Domingos]
+    \cite{poon-domingos}
+    \begin{itemize}
+      \item Introduction
+      \item Sum-Product Networks
+      \item Sum-Product Networks and other models
+    \end{itemize}
+\end{itemize}
+
+\section{Definição das atividades}
+
+\paragraph{
+  Os tópicos mencionados na seção anterior referem-se à definição de uma Sum-Product Network e
+  citam algumas semelhanças com outros modelos probabilísticos assim como suas diferenças.
+}
+
+\paragraph{
+  Neste relatório vamos definir o que são Sum-Product Networks de uma forma mais didática e vamos
+  supor que o leitor tenha conhecimento prévio de todo conteúdo coberto nos relatórios anteriores.
+  Após termos definido Sum-Product Networks, vamos ver algumas propriedades e teoremas relacionados
+  e em seguida vamos comparar, de forma sucinta, com outros modelos probabilísticos.
+}
+
+\paragraph{
+  Vamos separar esta seção nos seguintes tópicos:
+}
+
+\begin{enumerate}
+  \item Introdução
+  \item Definição
+  \item Propriedades
+  \item Comparação
+\end{enumerate}
+
+\subsection{Introdução}
+
+
+
+\subsection{Definição}
+
+\newpage
+
+\printbibliography
+
+\end{document}
