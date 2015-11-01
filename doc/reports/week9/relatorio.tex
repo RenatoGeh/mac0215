@@ -99,6 +99,10 @@ Orientador: Denis Deratani Mauá
 
 \begin{enumerate}
   \item Introdução
+    \begin{enumerate}[label*=\arabic*.]
+      \item Distribuição normalizada de produtos de factors
+      \item Função de partição
+    \end{enumerate}
   \item Definição
   \item Propriedades
   \item Comparação
@@ -106,9 +110,107 @@ Orientador: Denis Deratani Mauá
 
 \subsection{Introdução}
 
+\paragraph{
+  Um dos maiores problemas com modelos gráficos é a intractabilidade da inferência e aprendizado
+  da estrutura. Inferência é sempre exponencial no pior caso, e como aprendizado usa inferência,
+  a complexidade continua intratável. Além do mais, a amostragem necessária para aprendizado
+  preciso é também exponencial no pior dos casos no tamanho do escopo. De fato existem modelos
+  gráficos onde a inferência é tratável, no entanto elas são limitadas quanto às representações
+  de distribuições de forma compacta.
+}
 
+\paragraph{
+  Vamos mostrar que Sum-Product Networks (SPN), um novo tipo de arquitetura profunda, permite que
+  computemos a função partição, a probabilidade de evidência e o estado MAP\cite{report-1} com
+  complexidade linear no número de arestas da SPN. Também vamos definir validade de uma SPN assim
+  como completude e consistência. Depois vamos mostrar outras definições assim como alguns teoremas
+  derivados dessas propriedades.
+}
+
+\paragraph{
+  Antes de começarmos a definir Sum-Product Networks, precisamos antes explicar o que é uma
+  distribuição normalizada de produtos de factors e definir uma função de partição.
+}
+
+\subsubsection{Distribuição normalizada de produtos de factors}
+
+\paragraph{
+  O objetivo de modelos gráficos probabilísticos é representar distribuições de forma compacta.
+  Podemos representar tais distribuições como um produto normalizado dos factors\cite{report-2}
+  envolvidos. Tal representação é um jeito compacto de se representar as CPTs envolvidas.
+}
+
+\begin{spn-def} Sejam $x \in \mathcal{X}$ um vetor $d$-dimensional representando uma instância de
+  $d$ variáveis, $\phi_k$ uma função potential\cite{report-2} do subconjunto $x_{\{k\}}$ de
+  variáveis (ou seja, seu escopo\cite{project-def}) e $Z$ a função partição que veremos mais a
+  frente. Representamos distribuições compactamente como o seguinte produto normalizado:
+  \begin{equation}
+    P(X = x) = \frac{1}{Z} \prod_k \phi_k (x_{\{k\}})
+  \end{equation}
+\end{spn-def}
+
+\paragraph{
+  A representação acima é dita normalizada pois queremos representa-la como uma probabilidade, ou
+  seja, um número real no intervalo $[0, 1]$. Como pode-se notar, dividimos o produtório por $Z$,
+  a chamada função partição. De fato, como veremos a seguir, a função partição normaliza o produto
+  dos factors.
+}
+
+\subsubsection{Função de partição}
+
+\paragraph{
+  Dizemos a função partição uma função que toma como argumentos todos os estados das variáveis e
+  retorna a soma de todos os produtórios de todos os factors de cada estado.
+}
+
+\begin{spn-def} Seja $\phi_k$ uma função potential, dizemos que a função partição é
+  \begin{equation}
+    Z = \sum_{x \in X} \prod_k \phi_k (x_{\{k\}})
+  \end{equation}
+\end{spn-def}
+
+\paragraph{
+  Portanto, é fácil notar que $\frac{1}{Z} \prod_k \phi_k (x_{\{k\}})$ é uma normalização por $Z$,
+  já que $Z$ é a soma de todos os possíveis resultados do produtório, e portanto será sempre maior
+  ou igual ao valor do produtório normalizado, levando a $0 \leq P(X = x) \leq 1$, assumindo-se que
+  $\phi_i \geq 0$.
+}
+
+\paragraph{
+  No caso de $Z=1$, então temos o caso trivial onde o produtório dos factors dada uma instância já
+  está dentro do intervalo $[0,1]$.
+}
+
+\paragraph{
+  Uma das dificuldades de se computar inferência em modelos gráficos é a intractabilidade de $Z$,
+  já que $Z$ é a soma de um número exponencial de termos. Como todas as marginals\cite{report-5}
+  são somas de subconjuntos desses termos, computa-las é igualmente intratável. No entanto, se
+  acharmos uma maneira eficiente de computar $Z$, então também podemos computar as marginals
+  eficientemente. Mas $Z$ é computado apenas com somas e produtos, e pode ser eficientemente
+  computado se aplicarmos a distributiva em $Z$ de tal forma que envolvamos um número polinomial de
+  somas e produtos.
+}
 
 \subsection{Definição}
+
+\paragraph{
+  Assim como em [P. Domingos, H. Poon]\cite{poon-domingos}, vamos introduzir Sum-Product Networks
+  com variáveis Booleanas. Mais para frente veremos que para variáveis discretas ou contínuas o
+  processo é similar.
+}
+
+\paragraph{
+  Antes de definirmos SPNs, vamos introduzir algumas notações:
+}
+
+\begin{itemize}
+  \item A negação de $X_i$ é representada por $\overline{X_i}$.
+  \item A função indicadora\cite{report-1} $[.]$ tem valor 1 se seu argumento é $true$ e 0 caso
+    contrário.
+  \item Abreviaremos $[X_i]$ por $x_i$ e $[\overline{X}_i]$ por $\overline{x_i}$.
+\end{itemize}
+
+
 
 \newpage
 
