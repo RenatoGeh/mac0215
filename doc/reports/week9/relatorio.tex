@@ -204,13 +204,119 @@ Orientador: Denis Deratani Mauá
 }
 
 \begin{itemize}
-  \item A negação de $X_i$ é representada por $\overline{X_i}$.
+  \item A negação de $X_i$ é representada por $\overline{X}_i$.
   \item A função indicadora\cite{report-1} $[.]$ tem valor 1 se seu argumento é $true$ e 0 caso
     contrário.
-  \item Abreviaremos $[X_i]$ por $x_i$ e $[\overline{X}_i]$ por $\overline{x_i}$.
+  \item Abreviaremos $[X_i]$ por $x_i$ e $[\overline{X}_i]$ por $\overline{x}_i$.
 \end{itemize}
 
+\paragraph{
+  Seja $\Phi(x) \geq 0$ uma distribuição de probabilidade não-normalizada. A network polynomial
+  \cite{report-1} de $\Phi(x)$ é $\sum_x \Phi(x) \Pi (x)$, onde $\Pi(x)$ é o produto dos
+  indicadores que tenham valor 1 no estado $x$. Lembrando o que vimos nos relatórios anteriores,
+  a network polynomial da Rede Bayesiana $X_1 \to X_2$ é $P(x_1)P(x_2|x_1)x_1x_2+P(x_1)
+  P(\overline{x}_2|x_1)x_1\overline{x}_2+P(\overline{x}_1)P(x_2|\overline{x}_1)\overline{x}_1x_2+
+  P(\overline{x}_1)P(\overline{x}_2|\overline{x}_1)\overline{x}_1\overline{x}_2$.
+}
 
+\paragraph{
+  A função partição é o valor da network polynomial quando todos os indicadores são 1. Para
+  qualquer evidêncie $e$, computar $P(e)=\Phi(e)/Z$ é linear no tamanho da network polynomial, que
+  por sua vez tem tamanho exponencial em número de variáveis. No entanto, podemos representar e
+  avaliar a network polynomial em tempo e espaço polynomial usando Sum-Product Networks.
+}
+
+\paragraph{
+  Vamos a seguir ver a definição de SPNs dada por P. Domingos e H. Poon\cite{poon-domingos}.
+}
+
+\begin{spn-def} Uma Sum-Product Network (SPN) sob variáveis $x_1,...,x_d$ é um grafo enraizado,
+  direcionado e acíclico (DAG) cujas folhas são indicadores $x_1,...,x_d$ e $\overline{x}_1,...,
+  \overline{x}_d$ e cujos nós internos são somas e produtos. Cada aresta $(i,j)$ com origem em um
+  nó soma $i$ tem um peso não-negativo $w_{ij}$. O valor de um nó produto é o produto dos valores
+  de seus filhos. O valor de um nó soma é $\sum_{j \in Ch(i)} w_{ij}v_j$, onde $Ch(i)$ são os
+  filhos de $i$ e $v_j$ é o valor do nó $j$. O valor da SPN é o valor de sua raíz.
+\end{spn-def}
+
+\begin{figure}[h]
+  \centering{
+    \includegraphics[scale=0.3]{graphs/spn_1.png}
+    \includegraphics[scale=0.3]{graphs/spn_2.png}
+    \caption{A esquerda uma SPN implementando uma naive Bayes mixture model. A direita uma SPN
+    implementando uma junction tree. [P. Domingos, H. Poon]\cite{poon-domingos}}
+  }
+\end{figure}
+
+\paragraph{
+  Vamos assumir sem perda de generalidade que nós somas e nós produtos estão organizados de tal
+  forma que somas são sempre alternadas com produtos e vice-versa. Ou seja, se $i$ é um nó soma,
+  então $\forall x \in Ch(i)$, $x$ é ou um nó produto ou uma folha (e portanto uma variável).
+  Analogamente, se $i$ é um nó produto, então $\forall x \in Ch(i)$, $x$ é ou um nó soma ou folha.
+}
+
+\paragraph{
+  Denotamos a Sum-Product Network $S$ como uma função das variáveis indicadoras $x_1,...,x_d$ e
+  $\overline{x}_1,...,\overline{x}_d$ como $S(x_1,...,x_d,\overline{x}_1,...,\overline{x}_d)$. Um
+  estado $x$ é completo quando para cada variável $X_i$, seus indicadores nunca são iguais, ou
+  seja, $x_i=1$ e $\overline{x}_i=0$ ou $x_i=0$ e $\overline{x}_i=1$. Se queremos $S$ em função
+  de um estado $x$ completo, então representamos como $S(x)$. Se os indicadores especificam uma
+  evidência\cite{project-def} $e$, então abreviamos como $S(e)$. No caso de todos os indicadores
+  serem valorados em 1, então dizemos $S(*)$.
+}
+
+\paragraph{
+  A subrede enraizada em um nó $n$ em uma SPN é uma SPN, e é representada como $S_n(.)$. Os valores
+  de $S(x), \forall x \in \mathcal{X}$ define uma distribuição de probabilidade não-normalizada sob
+  $\mathcal{X}$. A probabilidade não-normalizada da evidência $e$ é $\Phi_S(e)=\sum_{x \in e}S(x)$,
+  onde a soma tem seus estados consistentes com $e$. A função partição da distribuição definida
+  por $S(x)$ é $Z_S = \sum_{x \in \mathcal{X}} S(x)$. O escopo\cite{project-def} de uma SPN $S$ é o
+  conjunto de variáveis que aparecem em $S$. Uma variável $X_i$ é negada em $S$ se $\overline{x}_i$
+  é uma folha de $S$ e não-negada se $x_i$ é uma folha de $S$.
+}
+
+\paragraph{
+  A partir disso podemos construir a definição encontrada em [P. Domingos, R. Gens]
+  \cite{gens-domingos}.
+}
+
+\begin{spn-def} Definimos recursivamente uma Sum-Product Network (SPN):
+  \begin{enumerate}
+    \item Uma distribuição monovariável tratável é uma SPN.
+    \item Um produto de SPNs com escopos disjuntos é uma SPN.
+    \item Uma soma ponderada de SPNs com mesmo escopo é uma SPN se todos os pesos são não-negativos.
+    \item Nada mais é uma SPN.
+  \end{enumerate}
+\end{spn-def}
+
+\paragraph{
+  Exemplificando com a Figura 1, a SPN $S$ será:
+}
+
+\begin{equation}
+  \begin{split}
+    S(x_1,x_2,\overline{x}_1,\overline{x}_2)=0.5(0.6x_1 + 0.4\overline{x}_1)(0.3x_2 + 0.7
+    \overline{x}_2) +\\
+    + 0.2(0.6x_1 + 0.4\overline{x}_1)(0.2x_2 + 0.8\overline{x}_2) +\\
+    + 0.3(0.9x_1 + 0.1\overline{x_1})(0.2x_2 + 0.8\overline{x}_2)\phantom{+}
+  \end{split}
+\end{equation}
+
+\paragraph{
+  E a network polynomial será a expansão de $S$, ou seja, $(0.5 \times 0.6 \times 0.3 + 0.2 \times
+  0.6 \times 0.2 + 0.3 \times 0.9 \times 0.2)x_1x_2 + ...$. Se um estado completo $x = \{X_1 = 1,
+  X_2 = 0\}$, então $S(x) = S(1, 0, 0, 1)$ Se a evidência $e={X_1=1}$, então $S(e)=S(1,1,0,1)$.
+  E, por fim, $S(*) = S(1, 1, 1, 1)$.
+}
+
+\subsection{Propriedades}
+
+\paragraph{
+  Nesta subseção, vamos definir a validade de uma SPN, assim como completude e consistência. Em
+  seguida vamos provar que uma SPN é válida se é completa e consistente. Depois vamos definir
+  representabilidade, complexidade da função partição, decomponibilidade de uma SPN e finalmente
+  provaremos que a função partição, probabilidade de evidência e o estado MAP\cite{report-1} de uma
+  SPN podem ser computados em tempo linear no número de arestas da SPN.
+}
 
 \newpage
 
