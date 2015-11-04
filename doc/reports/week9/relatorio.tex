@@ -40,8 +40,8 @@
 
 \theoremstyle{plain}
 
-\newtheorem*{spn-def}{Definição}
-\newtheorem*{spn-thm}{Teorema}
+\newtheorem{spn-def}{Definição}
+\newtheorem{spn-thm}{Teorema}
 
 \title{\textbf{Uma Introdução a Sum-Product Networks}}
 
@@ -268,10 +268,11 @@ Orientador: Denis Deratani Mauá
   A subrede enraizada em um nó $n$ em uma SPN é uma SPN, e é representada como $S_n(.)$. Os valores
   de $S(x), \forall x \in \mathcal{X}$ define uma distribuição de probabilidade não-normalizada sob
   $\mathcal{X}$. A probabilidade não-normalizada da evidência $e$ é $\Phi_S(e)=\sum_{x \in e}S(x)$,
-  onde a soma tem seus estados consistentes com $e$. A função partição da distribuição definida
-  por $S(x)$ é $Z_S = \sum_{x \in \mathcal{X}} S(x)$. O escopo\cite{project-def} de uma SPN $S$ é o
-  conjunto de variáveis que aparecem em $S$. Uma variável $X_i$ é negada em $S$ se $\overline{x}_i$
-  é uma folha de $S$ e não-negada se $x_i$ é uma folha de $S$.
+  onde a soma tem seus estados consistentes\cite{report-1} com $e$. A função partição da
+  distribuição definida por $S(x)$ é $Z_S = \sum_{x \in \mathcal{X}} S(x)$. O escopo
+  \cite{project-def} de uma SPN $S$ é o conjunto de variáveis que aparecem em $S$. Uma variável
+  $X_i$ é negada em $S$ se $\overline{x}_i$ é uma folha de $S$ e não-negada se $x_i$ é uma folha de
+  $S$.
 }
 
 \paragraph{
@@ -317,6 +318,102 @@ Orientador: Denis Deratani Mauá
   provaremos que a função partição, probabilidade de evidência e o estado MAP\cite{report-1} de uma
   SPN podem ser computados em tempo linear no número de arestas da SPN.
 }
+
+\begin{spn-def} Uma Sum-Product Network $S$ é válida sse $S(e)=\Phi_S(e)$ para toda evidência $e$.
+\end{spn-def}
+
+\paragraph{
+  A Definição 5 diz que a SPN sempre computa a probabilidade de evidência corretamente, então a SPN
+  é válida. Em particular, se uma SPN $S$ é válida, então $S(*)=Z_S$. Uma SPN válida computa a
+  probabilidade de evidência em tempo linear no número de arestas, como provaremos mais a frente.
+}
+
+\paragraph{
+  Já que uma SPN válida é linear, é preferível aprendermos apenas SPNs válidas. Vamos ver algumas
+  outras condições para a validade de uma SPN, mas para isso precisamos definir completude e
+  consistência.
+}
+
+\begin{spn-def} Uma Sum-Product Network é \emph{completa} sse todos os filhos do mesmo nó soma tem
+  mesmo escopo.
+\end{spn-def}
+
+\begin{spn-def} Uma Sum-Product Network é \emph{consistente} sse nenhuma variável aparece negada em
+  um filho de um nó produto e não-negada em outro.
+\end{spn-def}
+
+\paragraph{
+  A partir disso podemos construir o seguinte teorema de P. Domingos e H. Poon\cite{poon-domingos}.
+}
+
+\begin{spn-thm} Uma Sum-Product Network é válida se ela é completa e consistente.
+\end{spn-thm}
+
+\begin{proof}[Prova]
+  $ $\newline
+
+  Toda SPN $S$ pode ser representada por uma network polynomial $\sum_k s_k \prod_k (...)$, onde
+  $\prod_k (...)$ é um monômio das variáveis indicadores e $s_k \geq 0$ é seu coeficiente (a soma
+  dos produtos dos parâmetros que tenham os respectivos indicadores). Chamamos essa representação
+  de \textit{expansão} da SPN, já que ela é obtida aplicando a distributiva de baixo-para-cima em
+  todos os nós produtos da SPN. Ao aplicarmos a distributiva, tratamos cada folha $x_i$ como a soma
+  expandida $1x_i + 0\overline{x}_i$ e $\overline{x}_i$ como $0x_i + 1\overline{x}_i$.\\
+
+  Uma SPN é valida se sua expansão é a própria network polynomial, ou seja, se os monômios da
+  expansão e os estados $x$ são correspondentes. Isso quer dizer que:
+
+  \begin{enumerate}
+    \item Cada monômio é não-zero em exatamente um estado.
+    \item Cada estado tem exatamente um monômio não-zero.
+  \end{enumerate}
+
+  Pela condição 2, $S(x)$ é igual ao coeficiente $s_x$ do monômio não-zero e portanto $\Phi_s(e) =
+  \sum_{x \in e} S(x) = \sum_{x \in e} s_x = \sum_k s_k n_k (e)$, onde $n_k(e)$ é o número de
+  estados $x$ consistentes com $e$ que tenham $\sum_k(x)=1$.\\
+
+  Pela condição 1, $n_k=1$ se o estado $x$ que tenha $\prod_k(x)=1$ é consistente com a evidência.
+  Senão $n_k=0$ e portanto $\Phi_s(e)=\sum_{k:\prod_k(e)=1}s_k=S(e)$ e a SPN é válida.\\
+
+  Por indução, podemos provar, começando pelas folhas até a raíz, que, se a SPN é completa e
+  consistente, então sua expansão é sua network polynomial.\\
+
+  O caso folha é trivialmente verdade, pois se o nó é folha, então ele tem apenas uma variável em
+  seu escopo e portanto é completo. Pela mesma hipótese, não se pode ter uma variável negada e
+  não-negada já que existe apenas um indicador, tornando-a consistente. Portanto, o caso folha é
+  completo e consistente e, se computarmos sua SPN $S(l)=v_lx_l$, podemos ver que $S$ é igual a sua
+  network polynomial.\\
+
+  Consideremos agora apenas os nós internos. Assumimos apenas nós internos com dois filhos, mas a
+  extensão para o caso geral é imediata. Seja $n^0$ um nó interno arbitrário com filhos $n^1$ e
+  $n^2$. Teremos as seguintes notações:
+
+  \begin{itemize}
+    \item $V^i$ o escopo do nó $n^i$,
+    \item $x^i$ o estado do escopo $V^i$,
+    \item $S^i$ a expansão do subgrafo enraizado em $n^i$,
+    \item $\Phi^i(x^i)$ a probabilidade não-normalizada de $x_i$ sob $S_i$.
+  \end{itemize}
+
+  Pela hipótese de indução, $S^1=\sum_{x^1}\Phi^1(x^1)\prod(x^1)$ e  $S^2=\sum_{x^2}\Phi^2(x^2)
+  \prod(x^2)$.\\
+
+  Se $n^0$ é um nó soma, então $S^0=w_{01}\sum_{x^1}\Phi^1(x^1)\prod(x^1)+w_{02}\sum_{x^2}\Phi^2
+  (x^2)\prod(x^2)$. Se $V^1 \neq V^2$, então cada estado em $V^1$ (ou $V^2$) corresponde a múltiplos
+  estados de $V^0 = V^1 \cup V^2$, e portanto cada monômio de $V^1$ (e $V^2$) é não-zero em mais de
+  um estado de $V^0$, quebrando a correspondência entre monômios de $S^0$ e estados de $V^0$. Mas
+  se a SPN é completa, então $V^0 = V^1 = V^2$ e seus estados são correspondentes. Portanto, pela
+  indução de hipótese os monômios de $V^1$ e $V^2$ são também correspondentes e $S^0=\sum_{x^0}
+  (w_{01}\Phi^1(x^0)+w_{02}\Phi^2(x^0))\prod(x^0)$, ou seja, a expansão de $S^0$ é sua network
+  polynomial.\\
+
+  Se $n^0$ é um nó produto, então $S^0=(\sum_{x^1}\Phi^1(x^1)\prod(x^1))(\sum_{x^2}\Phi^2(x^2)\prod
+  (x^2))$. Se $V^1 \cap V^2 = \emptyset$, então segue-se imediatamente que a expansão de $V^0$ é a
+  network polynomial. No caso mais geral, sejam $V^{12}=V^1 \cup V^2$, $V^{1--}=V^1 \setminus V^2$
+  e $V^{2--}=V^2 \setminus V^1$, e sejam $x^{12}$, $x^{1--}$ e $x^{2--}$ seus estados
+  correspondentes. Mas já que $\Phi^1(x^1)$ é não-zero em exatamente um estado $x^1$ e similarmente
+  para $\Phi^2(x^2)$, então cada monômio no produto de $S^1$ e $S^2$ é não-zero no máximo em um
+  único estado de $V^0 = V^1 \cup V^2$.\\
+\end{proof}
 
 \newpage
 
