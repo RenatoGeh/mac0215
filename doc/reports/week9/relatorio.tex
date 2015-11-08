@@ -90,7 +90,8 @@ Orientador: Denis Deratani Mauá
   Neste relatório vamos definir o que são Sum-Product Networks de uma forma mais didática e vamos
   supor que o leitor tenha conhecimento prévio de todo conteúdo coberto nos relatórios anteriores.
   Após termos definido Sum-Product Networks, vamos ver algumas propriedades e teoremas relacionados
-  e em seguida vamos comparar, de forma sucinta, com outros modelos probabilísticos.
+  e em seguida vamos comparar, de forma sucinta, com outros modelos probabilísticos. O conteúdo
+  presente nesse relatório é baseado fortemente nos dois papers acima.
 }
 
 \paragraph{
@@ -412,8 +413,29 @@ Orientador: Denis Deratani Mauá
   e $V^{2--}=V^2 \setminus V^1$, e sejam $x^{12}$, $x^{1--}$ e $x^{2--}$ seus estados
   correspondentes. Mas já que $\Phi^1(x^1)$ é não-zero em exatamente um estado $x^1$ e similarmente
   para $\Phi^2(x^2)$, então cada monômio no produto de $S^1$ e $S^2$ é não-zero no máximo em um
-  único estado de $V^0 = V^1 \cup V^2$.\\
+  único estado de $V^0 = V^1 \cup V^2$. Se a SPN não é consistente, então pelo menos um monômio no
+  produto contém indicadores tanto positivos quanto negativos, $x_i$ e $\overline{x}_i$, de uma
+  variável. Como nenhum monômio na network polynomial contém tanto $x_i$ e $\overline{x}_i$, então
+  a expansão de $S^0$ não é igual a sua network polynomial. Para garantirmos que cada monômio em
+  $S^0$ seja não-zero em pelo menos um estado de $V^0$ então, para cada par $(\prod(x^{1--},
+  x^{12}), \prod(x^{12}, x^{2--}))$, deve existir um estado $x^0=(x^{1--},x^{12},x^{2--})$ onde
+  ambos $\prod(x^{1--},x^{12})$ e $\prod(x^{12},x^{2--})$ são iguais a 1, e portanto os indicadores
+  sobre $x^12$ em ambos os monômios devem ser consistentes. Como, pela hipótese de indução, eles
+  especificam completamente $x^{12}$, então eles devem ser os mesmos nos dois monômios. Portanto
+  todos os monômios $(\prod(x^{1--},x^{12}), \prod(x^{12},x^{2--}))$ devem ter mesmo $x^{12}$
+  indicadores, ou seja, a SPN deve ser consistente.
 \end{proof}
+
+\paragraph{
+  Completude e consistência não são necessárias para validade de uma SPN. Por exemplo, a rede
+  $S(x_1,x_2,\overline{x}_2,\overline{x}_2) = \frac{1}{2}x_1\overline{x}_2 + \frac{1}{2}x_1$ é
+  incompleta e inconsistênte, mas satisfaz $\Phi_S(e) = \sum_{x \in e} S(x)$ para toda evidência
+  $e$, e pela definição de validade $S$ é válida. No entanto, completude e consistência são
+  necessárias para afirmar que toda subrede de $S$ é válida. Tal hipótese pode ser provada por
+  contradição. Seja $S$ um nó que viola ou a completude ou a consistência da rede. Pode-se mostrar
+  que $S$ não é válida, já que ela ou subestima o valor da soma se é incompleta ou superestima se
+  ela é inconsistente.
+}
 
 \newpage
 
