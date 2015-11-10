@@ -68,12 +68,12 @@
 \vspace*{0.2cm}
             \begin{block}{Motivação}
               \justifying
-              Um dos maiores problemas na área de Aprendizado Computacional Probabilístico em
-              Inteligência Artificial é a questão da intractabilidade da inferência, e portanto
-              aprendizado, em amostras muito grandes, já que a complexidade na maioria dos Modelos
-              Gráficos Probabilísticos (PGM) é exponencial. Apesar de existirem modelos onde a
-              inferência é, de fato, tratável, elas possuem limitações quanto à compactibilidade de
-              suas representações. \\~\\
+              Um dos maiores problemas na área de Aprendizado Computacional em Inteligência
+              Artificial é a questão da intractabilidade da inferência, e portanto aprendizado, em
+              amostras muito grandes, já que a complexidade na maioria dos Modelos Gráficos
+              Probabilísticos (PGM) é exponencial. Apesar de existirem modelos onde a inferência é,
+              de fato, tratável, elas possuem limitações quanto à compactibilidade de suas
+              representações. \\~\\
 
               Em 2011\cite{poon-domingos}, Pedro Domingos e Hoifung Poon introduziram um novo tipo
               de modelo probabilístico cuja inferência é sempre tratável e ainda assim é mais
@@ -172,7 +172,6 @@
                 \KwOut{Uma SPN com estrutura e parâmetros construídos por aprendizado.}
                 \tcc{Cria uma SPN inicial que seja válida.}
                 $S \leftarrow$ GenerateDenseSPN($X$)\;
-                \tcc{Inicializa pesos iniciais.}
                 InitializeWeights($S$)\;
                 \Repeat{convergência}{
                   \ForAll{$d \in D$}{
@@ -190,7 +189,37 @@
             \begin{block}{Experimentos}
             \justifying
               Os experimentos mostrados a seguir foram extraídos a partir da implementação do
-              algoritmo mostrado na seção anterior por Domingos e Poon\cite{website:poon-domingos-code}.
+              algoritmo mostrado na seção anterior e mostram os resultados do código
+              \cite{website:poon-domingos-code} implementado por Domingos e Poon e citados em
+              \cite{poon-domingos}.
+
+              \begin{figure}[h]
+                \includegraphics[scale=0.3]{completions/plane0.png}
+                \includegraphics[scale=0.3]{completions/face0.png} \\
+                \includegraphics[scale=0.3]{completions/stop0.png}
+                \includegraphics[scale=0.3]{completions/dollar0.png}
+                \caption{A saída do algoritmo consiste na compleção do lado esquerdo das imagens
+                  a partir de um conjunto de treino. Para cada par de imagens, a imagem da esquerda
+                  é a original, enquanto que a direita tem a metade esquerda completada pela SPN
+                  e a outra metade igual a da original como evidência.}
+              \end{figure}
+
+              \begin{table}[h]
+                \begin{center}
+                  \begin{tabular}{l | r | r | r}
+                    Arquitetura & Rostos & Motos & Carros \\
+                    \hline
+                    SPN & 0.99 & 0.99 & 0.98 \\
+                    CDBN & 0.95 & 0.81 & 0.87 \\
+                  \end{tabular}
+                \end{center}
+                \caption{Comparação entre SPNs e CDBNs (Convolutional Deep Belief Networks) em
+                  classificação (reconhecimento) de imagens.}
+              \end{table}
+
+              Pode-se ver que os resultados das SPNs são muito promissores e, dado que o algoritmo
+              produzido por Domingos e Poon não toma muita vantagem da expressividade da estrutura
+              local de SPNs, é fácil notar que ainda há muito espaço para melhorias.
 
 \vspace*{0.2cm}
             \end{block}
@@ -203,14 +232,14 @@
                 preciso.\\~\\
 
                 Em seguida planeja-se estudar outros tipos de aprendizado em SPNs, como o
-                introduzido por Gens e Domingos\cite{gens-domingos}, o uso de buscas gulosas e
-                clustering por Dennis e Ventura\cite{clustering, greedy-search} e em seguida o
-                uso de Non-Parametric Bayesian Sum-Product Networks\cite{non-parametric-bayesian}.
+                introduzido por Gens e Domingos\cite{gens-domingos}, buscas gulosas e clustering
+                por Dennis e Ventura\cite{clustering, greedy-search} e Non-Parametric Bayesian
+                Sum-Product Networks\cite{non-parametric-bayesian}.
 
             \end{block}
 \vspace*{0.2cm}
             \begin{block}{Referências}
-            \small
+            \scriptsize
             \bibliographystyle{alpha}
             \bibliography{references}
 \vspace*{0.2cm}

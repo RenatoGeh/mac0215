@@ -154,6 +154,10 @@
   *{file}   {ime.png}     {Graphic v0.0}
   *{file}   {spn_1.png}   {Graphic v0.0}
   *{file}   {spn_2.png}   {Graphic v0.0}
+  *{file}   {completions/plane0.png}{0000/00/00 v0.0}
+  *{file}   {completions/face0.png}{0000/00/00 v0.0}
+  *{file}   {completions/stop0.png}{0000/00/00 v0.0}
+  *{file}   {completions/dollar0.png}{0000/00/00 v0.0}
   *{file}   {poster.bbl}  {0000/00/00 v0.0}
   *{file}   {ime.png}     {Graphic v0.0}
 }
