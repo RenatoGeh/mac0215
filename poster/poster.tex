@@ -15,6 +15,8 @@
 \usepackage[orientation=portrait,size=a2,scale=1.4]{beamerposter}
 \usepackage[ruled]{algorithm2e}
 
+\usepackage{enumerate}
+
 \usepackage{snapshot} % will write a .dep file with all dependencies, allows for easy bundling
 
 \DeclareMathSizes{17.42}{15}{14}{10}  % Math text size
@@ -27,8 +29,8 @@
 \newcommand{\voxel}{\emph{voxel}\xspace}
 \newcommand{\voxels}{\emph{voxels}\xspace}
 
-\newenvironment<>{spn-def}[1][]
-  {\alert{\upshape\textbf{Definição}} #1\hspace*{\fill} \\
+\newenvironment<>{spn-def}[1][\unskip]
+  {\alert{\upshape\textbf{Definição #1}}\hspace*{\fill} \\
     \itshape}
   {}
 
@@ -60,7 +62,7 @@
     % Set up a column
     \begin{column}{.5\textwidth}
       \begin{beamercolorbox}[center,wd=\textwidth]{postercolumn}
-        \begin{minipage}[T]{.95\textwidth} % tweaks the width, makes a new \textwidth
+        \begin{minipage}[T]{1\textwidth} % tweaks the width, makes a new \textwidth
           \parbox[t][\columnheight]{\textwidth}{ % must be some better way to set the the height, width and textwidth simultaneously
             % Since all columns are the same length, it is all nice and tidy.  You have to get the height empirically
             % ---------------------------------------------------------%
@@ -68,18 +70,31 @@
 \vspace*{0.2cm}
             \begin{block}{Motivação}
               \justifying
-              Um dos maiores problemas na área de Aprendizado Computacional em Inteligência
-              Artificial é a questão da intractabilidade da inferência, e portanto aprendizado, em
-              amostras muito grandes, já que a complexidade na maioria dos Modelos Gráficos
-              Probabilísticos (PGM) é exponencial. Apesar de existirem modelos onde a inferência é,
-              de fato, tratável, elas possuem limitações quanto à compactibilidade de suas
-              representações. \\~\\
+              Uma distribuição de probabilidades pode ser representada por uma função multilinear
+              nas variáveis da distribuição como
+
+              \begin{equation*}\tiny
+                P(x_1,...,x_n) = \sum_\alpha c_\alpha \prod_{i \in \alpha} x_i\text{.}
+              \end{equation*}
+
+              O objetivo em Modelos Gráficos Probabilísticos (PGM) é computar inferência, ou seja,
+              deseja-se encontrar a probabilidade
+
+              \begin{equation*}\tiny
+                P(x_q|x_{e_1},...,x_{e_m}) = \frac{P(x_qx_{e_1}...x_{e_m})}{P(x_{e_1}...x_{e_m})}
+                \text{\small onde $x_q$ é a query e $x_{e_1},...,x_{e_m}$ é a evidência.}
+              \end{equation*}
+
+              No entanto, inferência na maioria dos PGMs é intratável e, apesar de existirem
+              modelos onde a inferência é, de fato, tratável, elas possuem limitações quanto a
+              compactibilidade de suas representações. \\~\\
 
               Em 2011\cite{poon-domingos}, Pedro Domingos e Hoifung Poon introduziram um novo tipo
-              de modelo probabilístico cuja inferência é sempre tratável e ainda assim é mais
-              flexível que muitos outros modelos. Por meio de experimentos também comprovou-se que
-              tanto inferência quanto aprendizado foram mais rápidos e precisos que outras redes
-              profundas. \\~\\
+              de modelo probabilístico que representa eficientemente uma função multilinear através
+              de um digrafo acíclico enraizado (DAG), cuja inferência é sempre tratável e ainda
+              assim é mais flexível que muitos outros modelos. Por meio de experimentos também
+              comprovou-se que tanto inferência quanto aprendizado foram mais rápidos e precisos
+              que outras redes profundas. \\~\\
 
               O objetivo desse estudo é aprender a definição, estrutura e propriedades de
               Sum-Product Networks e em seguida estudar os vários tipos de aprendizado que podemos
@@ -91,61 +106,60 @@
 
             \begin{block}{Sum-Product Networks}
               \justifying
-              Uma Sum-Product Network (SPN) com variáveis $x_1,...,x_d$ é um grafo enraizado,
-              direcionado e acíclico (DAG) cujas folhas são indicadores $x_1,...,x_d$ e
-              $\overline{x}_1,...,\overline{x}_d$ e cujos nós internos são nós somas ou produtos.
-              Toda aresta $ij$ onde $i$ tem origem em um nó soma tem um peso $w_{ij} \geq 0$
-              associado. O valor de um nó $i$ é $v_i$. O valor de um nó soma $i$ é
-              $\sum_{j \in Ch(i)} w_{ij}v_j$. O valor de um nó produto $i$ é $\prod_{j \in Ch(i)}
-              v_j$. $Ch(i)$ é o conjunto de nós filhos de $i$. O valor de um nó folha é o valor da
-              própria variável. O valor de uma SPN $S$ é o valor de sua raíz.
+              Uma Sum-Product Network (SPN) tem definição recursiva. Seja $S$ uma SPN:
+              \begin{itemize}
+                \item Uma distribuição monovariável $P(X_i)$ é uma SPN.
+                \item $w_iS_i(X_\alpha)+w_jS_j(X_\beta)$ é uma SPN se $\alpha=\beta$ e pesos $w_i,
+                  w_j\geq0$.\hfill\small{(Definição 2)}
+                \item \normalsize{$S_i(X_\alpha) \cdot S_j(X_\beta)$ é uma SPN se}
+                  $\alpha\cap\beta=\emptyset$.\hfill\small{(Definição 3)}
+              \end{itemize}
 
               \begin{figure}[h]
-                \includegraphics[scale=0.38]{spn_1.png}
-                \includegraphics[scale=0.38]{spn_2.png}
-                \caption{A esquerda uma SPN implementando uma naive Bayes mixture model. A direita uma SPN
-    implementando uma junction tree. Fonte: Poon e Domingos\cite{poon-domingos}.}
+                \includegraphics[scale=0.3]{spn_1.png}
+                \includegraphics[scale=0.3]{spn_2.png}
+                \caption{A esquerda uma SPN implementando uma naive Bayes mixture model. A direita
+                  uma SPN implementando uma junction tree. Fonte: Poon e
+                  Domingos\cite{poon-domingos}.}
               \end{figure}
 
-              \begin{spn-def} Uma SPN $S$ é válida sse $S(e)=\Phi_S(e)$ para toda evidência $e$,
-                onde $\Phi_S$ é a distribuição de probabilidade não-normalizada da SPN $S$.
+              \begin{spn-def}[1] Uma SPN $S$ é válida sse $\exists P:S(x)=P(x)$, $\forall x$.
               \end{spn-def} \\~\\
 
-              \begin{spn-def} Uma SPN é \emph{completa} sse todos os filhos do mesmo nó soma tem
+              \begin{spn-def}[2] Uma SPN é \emph{completa} sse todos os filhos do mesmo nó soma tem
                 mesmo escopo.
               \end{spn-def} \\~\\
 
-              \begin{spn-def} Uma SPN é \emph{consistente} sse nenhuma variável aparece negada em
-                um filho de um nó produto e não-negada em outro.
+              \begin{spn-def}[3] Uma SPN é \emph{consistente} sse nenhuma variável aparece negada
+                em um filho de um nó produto e não-negada em outro.
               \end{spn-def} \\~\\
 
               \begin{spn-thm} Uma SPN é válida se ela é completa e consistente.
               \end{spn-thm} \\~\\
 
-              SPNs válidas são desejáveis pois uma SPN válida computa a probabilidade de evidência
-              em tempo linear em seu tamanho, além de completude e consistência permitirem que a
-              inferência da SPN seja garantidamente eficiente.
+              SPNs válidas são desejáveis pois uma SPN válida computa $P(x_1,...,x_n)$ em tempo
+              linear em seu tamanho, além de completude e consistência permitirem que a inferência
+              da SPN seja garantidamente eficiente.
 \vspace*{0.2cm}
             \end{block}
 \vspace*{0.2cm}
             \begin{block}{Aprendizado}
                 \justifying
-                  Podemos gerar uma SPN por aprendizado criando uma SPN densa inicialmente e em
-                  seguida aprendermos os pesos. Domingos e Poon\cite{poon-domingos} sugerem um
-                  algoritmo que cria uma SPN inicial e em seguida aprende os pesos por Gradient
-                  Descent ou Expectation-Maximization (EM) que é mostrada na seção Algoritmo de
-                  Aprendizado. No entanto, há outros jeitos de se aprender uma SPN. \\~\\
+                Pode-se dividir aprendizado de SPNs em duas classes:
+                \begin{description}
+                  \item[1] A partir de um DAG da SPN pré-definido, aprendemos os pesos do digrafo.
+                  \item[2] Ambos DAG e pesos são desconhecidos e são aprendidos.\\~\\
+                \end{description}
 
-                  Gens e Domingos\cite{gens-domingos} desenvolveram um método de aprendizado que
-                  explora dependência e independência dos dados do conjunto de treino para melhorar
-                  a flexibilidade e custo de aprendizado de uma SPN. O método proposto usa a
-                  expressividade da estrutura de SPNs para alcançar resultados superiores aos
-                  experimentos realizados anteriormente. \\~\\
+                O algoritmo proposto em \cite{poon-domingos} segue a primeira classe e é mostrado
+                na seção seguinte. A partir de uma SPN densa e válida podemos aprender os pesos por
+                Gradient Descent ou Expectation-Maximization (EM). \\~\\
 
-                  Outros métodos de aprendizado incluem buscas gulosas\cite{greedy-search},
-                  clustering de variáveis\cite{clustering} e o uso de Non-Parametric Bayesian
-                  Sum-Product Networks\cite{non-parametric-bayesian}.
-            \end{block}
+                Gens e Domingos\cite{gens-domingos} propõem um outro método de aprendizado que
+                explora a expressividade da SPN aprendendo-se não só os pesos como o próprio DAG.
+                Para aprender o digrafo pode-se maximizar o estimador de semelhança $\max_S P(X^1,
+                ...,X^N|S)$, onde $X^1,...,X^N$ são os conjuntos de dados.
+           \end{block}
           }
         \end{minipage}
       \end{beamercolorbox}
@@ -157,14 +171,14 @@
     % Set up a column
     \begin{column}{.5\textwidth}
       \begin{beamercolorbox}[center,wd=\textwidth]{postercolumn}
-        \begin{minipage}[T]{.95\textwidth} % tweaks the width, makes a new \textwidth
+        \begin{minipage}[T]{1\textwidth} % tweaks the width, makes a new \textwidth
           \parbox[t][\columnheight]{\textwidth}{ % must be some better way to set the the height, width and textwidth simultaneously
             % Since all columns are the same length, it is all nice and tidy.  You have to get the height empirically
             % ---------------------------------------------------------%
             % fill each column with content
 
 \vspace*{0.2cm}
-            \begin{block}{Algoritmo de Aprendizado}
+            \begin{block}{Algoritmo de Aprendizado de Pesos}
 
               \begin{algorithm}[H]
                 \NoCaptionOfAlgo
@@ -194,10 +208,10 @@
               \cite{poon-domingos}.
 
               \begin{figure}[h]
-                \includegraphics[scale=0.32]{completions/plane0.png}
-                \includegraphics[scale=0.32]{completions/face0.png} \\
-                \includegraphics[scale=0.32]{completions/stop0.png}
-                \includegraphics[scale=0.32]{completions/dollar0.png}
+                \includegraphics[scale=0.3425]{completions/plane0.png}
+                \includegraphics[scale=0.3425]{completions/face0.png} \\
+                \includegraphics[scale=0.3425]{completions/stop0.png}
+                \includegraphics[scale=0.3425]{completions/dollar0.png}
                 \caption{A saída do algoritmo consiste na compleção do lado esquerdo das imagens
                   a partir de um conjunto de treino. Para cada par de imagens, a imagem da esquerda
                   é a original, enquanto que a direita tem a metade esquerda completada pela SPN
@@ -209,12 +223,13 @@
                   \begin{tabular}{l | r | r | r}
                     Arquitetura & Rostos & Motos & Carros \\
                     \hline
-                    SPN & 0.99 & 0.99 & 0.98 \\
-                    CDBN & 0.95 & 0.81 & 0.87 \\
+                    SPN & 99\% & 99\% & 98\% \\
+                    CDBN & 95\% & 81\% & 87\% \\
                   \end{tabular}
                 \end{center}
-                \caption{Comparação entre SPNs e CDBNs (Convolutional Deep Belief Networks) em
-                  classificação (reconhecimento) de imagens.}
+                \caption{\justifying Taxa média de acertos em uma comparação entre SPNs e CDBNs
+                  (Convolutional Deep Belief Networks) em classificação (reconhecimento) de 
+                  imagens. SPNs obtiveram resultados quase perfeitos em reconhecimento.}
               \end{table}
 
               Pode-se ver que os resultados das SPNs são muito promissores e, dado que o algoritmo
@@ -227,14 +242,15 @@
             \begin{block}{Trabalhos futuros}
               \justifying
                 Pretende-se estudar a implementação do método de aprendizado proposto por Poon e
-                Domingos\cite{poon-domingos} e explorar mais a fundo as propriedades de uma SPN,
-                principalmente o uso de estrutura local para tornar o aprendizado mais rápido e
-                preciso.\\~\\
+                Domingos\cite{poon-domingos}, realizar outros experimentos com este algoritmo e
+                explorar mais a fundo as propriedades de uma SPN.\\~\\
 
-                Em seguida planeja-se estudar outros tipos de aprendizado em SPNs, como o
-                introduzido por Gens e Domingos\cite{gens-domingos}, buscas gulosas e clustering
-                por Dennis e Ventura\cite{clustering, greedy-search} e Non-Parametric Bayesian
-                Sum-Product Networks\cite{non-parametric-bayesian}.
+                Em seguida planeja-se estudar outros tipos de aprendizado em SPNs, principalmente
+                métodos que estejam contidos na classe 2 de aprendizado e portanto tomem vantagem
+                da estrutura local de SPNs, como o introduzido por Gens e
+                Domingos\cite{gens-domingos}, buscas gulosas e clustering por Dennis e
+                Ventura\cite{clustering, greedy-search} e Non-Parametric Bayesian Sum-Product
+                Networks\cite{non-parametric-bayesian}.
 
             \end{block}
 \vspace*{0.2cm}
