@@ -1,4 +1,4 @@
-%Poster do trabalho de conclusao de curso
+%Poster de MAC0215
 
 \documentclass[final]{beamer}
 \mode<presentation>{\usetheme{azul}}
@@ -30,14 +30,14 @@
 \newcommand{\voxels}{\emph{voxels}\xspace}
 
 \newenvironment<>{spn-def}[1][\unskip]
-  {\alert{\upshape\textbf{Definição #1}}\hspace*{\fill} \\
+  {\alert{\upshape\textbf{Definição #1}}
     \itshape}
-  {}
+  {\newline}
 
 \newenvironment<>{spn-thm}[1][]
-  {\alert{\upshape\textbf{Teorema}} #1\hspace*{\fill} \\
+  {\alert{\upshape\textbf{Teorema}}
     \itshape}
-  {}
+  {\newline}
 
 \listfiles
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -67,12 +67,11 @@
             % Since all columns are the same length, it is all nice and tidy.  You have to get the height empirically
             % ---------------------------------------------------------%
             % fill each column with content
-\vspace*{0.2cm}
             \begin{block}{Motivação}
               \justifying
               Uma distribuição de probabilidades pode ser representada por uma função multilinear
-              nas variáveis de uma distribuição de número exponencial de termos (ou seja, não
-              compacta) como
+              nas variáveis de uma distribuição com um número potencialmente exponencial de termos
+              (ou seja, não compacta) como
 
               \begin{equation*}\tiny
                 P(x_1,...,x_n) = \sum_\alpha c_\alpha \prod_{i \in \alpha} x_i\text{.}
@@ -101,7 +100,6 @@
               Sum-Product Networks e em seguida estudar os vários tipos de aprendizado que podemos
               efetuar neste modelo.
 
-            \vspace*{0.2cm}
             \end{block}
             \vspace*{0.2cm}
 
@@ -110,10 +108,9 @@
               Uma Sum-Product Network (SPN) tem definição recursiva. Seja $S$ uma SPN:
               \begin{itemize}
                 \item Uma distribuição monovariável $P(X_i)$ é uma SPN.
-                \item $w_iS_i(X_\alpha)+w_jS_j(X_\beta)$ é uma SPN válida se $\alpha=\beta$ e pesos
-                  $w_i,w_j\geq0$.\hfill\small{(Completude)}
-                \item \normalsize{$S_i(X_\alpha) \cdot S_j(X_\beta)$ é uma SPN válida se}
-                  $\alpha\cap\beta=\emptyset$.\hfill\small{(Consistência)} \\~\\
+                \item A soma $w_iS_i(X_\alpha)+w_jS_j(X_\beta)$ com pesos $w_j,w_i\geq0$ é uma SPN.
+                  \hfill(1)
+                \item O produto $S_i(X_\alpha) \cdot S_j(X_\beta)$ é uma SPN.\hfill(2)\\~\\
               \end{itemize}
 
               Podemos representar uma SPN com variáveis $x_1,...,x_d$ como um digrafo acíclico
@@ -126,20 +123,25 @@
               de sua raíz.
 
               \begin{figure}[h]
-                \includegraphics[scale=0.397]{spn_1.png}
-                \includegraphics[scale=0.397]{spn_2.png}
+                \includegraphics[scale=0.3]{spn_1.png}
+                \includegraphics[scale=0.3]{spn_2.png}
                 \caption{A esquerda uma SPN implementando uma naive Bayes mixture model. A direita
                   uma SPN implementando uma junction tree. Fonte: Poon e
                   Domingos\cite{poon-domingos}.}
               \end{figure}
 
-              \begin{spn-thm} Uma SPN $S$ é válida se $S$ é completa e consistente.\\~\\
+              \begin{spn-def} Uma SPN $S$ é válida sse $\exists P:S(x)=P(x), \forall x$.
+              \end{spn-def}
+              \begin{spn-def} Uma SPN $S$ é completa sse $\alpha=\beta$ em (1).
+              \end{spn-def}
+              \begin{spn-def} Uma SPN $S$ é consistente sse $\alpha\cap\beta=\emptyset$ em (2).
+              \end{spn-def}
+              \begin{spn-thm} Uma SPN $S$ é válida se $S$ é completa e consistente.
               \end{spn-thm}
 
-              Existem SPNs que não são válidas, mas SPNs válidas são desejáveis pois computam
-              $P(x_1,...,x_n)$ em tempo linear em seu tamanho, além de completude e consistência
-              permitirem que a inferência da SPN seja garantidamente eficiente.
-\vspace*{0.2cm}
+              SPNs válidas são desejáveis pois computam $P(x_1,...,x_n)$ em tempo linear em seu
+              tamanho, além de completude e consistência permitirem que a inferência da SPN seja
+              garantidamente eficiente.
             \end{block}
 \vspace*{0.2cm}
             \begin{block}{Aprendizado}
@@ -176,7 +178,6 @@
             % ---------------------------------------------------------%
             % fill each column with content
 
-\vspace*{0.2cm}
             \begin{block}{Algoritmo de Aprendizado de Pesos}
 
               \begin{algorithm}[H]
@@ -196,7 +197,6 @@
                 $S \leftarrow$ PruneZeroWeights($S$)\;
                 \KwRet{$S$}
               \end{algorithm}
-\vspace*{0.2cm}
             \end{block}
 \vspace*{0.2cm}
             \begin{block}{Experimentos}
@@ -207,10 +207,10 @@
               \cite{poon-domingos}.
 
               \begin{figure}[h]
-                \includegraphics[scale=0.3425]{completions/plane0.png}
-                \includegraphics[scale=0.3425]{completions/face0.png} \\
-                \includegraphics[scale=0.3425]{completions/stop0.png}
-                \includegraphics[scale=0.3425]{completions/dollar0.png}
+                \includegraphics[scale=0.37025]{completions/plane0.png}
+                \includegraphics[scale=0.37025]{completions/face0.png} \\
+                \includegraphics[scale=0.37025]{completions/stop0.png}
+                \includegraphics[scale=0.37025]{completions/dollar0.png}
                 \caption{A saída do algoritmo consiste na compleção do lado esquerdo das imagens
                   a partir de um conjunto de treino. Para cada par de imagens, a imagem da esquerda
                   é a original, enquanto que a direita tem a metade esquerda completada pela SPN
@@ -235,7 +235,6 @@
               produzido por Domingos e Poon não toma muita vantagem da expressividade da estrutura
               local de SPNs, é fácil notar que ainda há muito espaço para melhorias.
 
-\vspace*{0.2cm}
             \end{block}
 \vspace*{0.2cm}
             \begin{block}{Trabalhos futuros}
@@ -250,14 +249,14 @@
                 Domingos\cite{gens-domingos}, buscas gulosas e clustering por Dennis e
                 Ventura\cite{clustering, greedy-search} e Non-Parametric Bayesian Sum-Product
                 Networks\cite{non-parametric-bayesian}.
-
+                \vspace*{0.125cm}
             \end{block}
 \vspace*{0.2cm}
             \begin{block}{Referências}
             \scriptsize
             \bibliographystyle{alpha}
             \bibliography{references}
-\vspace*{0.2cm}
+\vspace*{0.22cm}
             \end{block}
             \vfill
           }
