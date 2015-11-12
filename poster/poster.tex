@@ -71,7 +71,8 @@
             \begin{block}{Motivação}
               \justifying
               Uma distribuição de probabilidades pode ser representada por uma função multilinear
-              nas variáveis da distribuição como
+              nas variáveis de uma distribuição de número exponencial de termos (ou seja, não
+              compacta) como
 
               \begin{equation*}\tiny
                 P(x_1,...,x_n) = \sum_\alpha c_\alpha \prod_{i \in \alpha} x_i\text{.}
@@ -82,12 +83,12 @@
 
               \begin{equation*}\tiny
                 P(x_q|x_{e_1},...,x_{e_m}) = \frac{P(x_qx_{e_1}...x_{e_m})}{P(x_{e_1}...x_{e_m})}
-                \text{\small onde $x_q$ é a query e $x_{e_1},...,x_{e_m}$ é a evidência.}
+                \text{\small, onde $x_q$ é a query e $x_{e_1},...,x_{e_m}$ é a evidência.}
               \end{equation*}
 
               No entanto, inferência na maioria dos PGMs é intratável e, apesar de existirem
-              modelos onde a inferência é, de fato, tratável, elas possuem limitações quanto a
-              compactibilidade de suas representações. \\~\\
+              modelos onde a inferência é, de fato, tratável, e serem representações compactas de
+              distribuições, elas são limitadas em sua flexibilidade.\\~\\
 
               Em 2011\cite{poon-domingos}, Pedro Domingos e Hoifung Poon introduziram um novo tipo
               de modelo probabilístico que representa eficientemente uma função multilinear através
@@ -109,37 +110,36 @@
               Uma Sum-Product Network (SPN) tem definição recursiva. Seja $S$ uma SPN:
               \begin{itemize}
                 \item Uma distribuição monovariável $P(X_i)$ é uma SPN.
-                \item $w_iS_i(X_\alpha)+w_jS_j(X_\beta)$ é uma SPN se $\alpha=\beta$ e pesos $w_i,
-                  w_j\geq0$.\hfill\small{(Definição 2)}
-                \item \normalsize{$S_i(X_\alpha) \cdot S_j(X_\beta)$ é uma SPN se}
-                  $\alpha\cap\beta=\emptyset$.\hfill\small{(Definição 3)}
+                \item $w_iS_i(X_\alpha)+w_jS_j(X_\beta)$ é uma SPN válida se $\alpha=\beta$ e pesos
+                  $w_i,w_j\geq0$.\hfill\small{(Completude)}
+                \item \normalsize{$S_i(X_\alpha) \cdot S_j(X_\beta)$ é uma SPN válida se}
+                  $\alpha\cap\beta=\emptyset$.\hfill\small{(Consistência)} \\~\\
               \end{itemize}
 
+              Podemos representar uma SPN com variáveis $x_1,...,x_d$ como um digrafo acíclico
+              enraizado (DAG) cujas folhas são indicadores $x_1,...,x_d$ e $\overline{x}_1,...,
+              \overline{x}_d$ e cujos nós internos são nós somas ou produtos. Toda aresta $ij$ onde
+              $i$ tem origem em um nó soma tem um peso $w_{ij} \geq 0$ associado. O valor de um nó
+              $i$ é $v_i$. O valor de um nó soma $i$ é $\sum_{j \in Ch(i)} w_{ij}v_j$. O valor de
+              um nó produto $i$ é $\prod_{j \in Ch(i)} v_j$. $Ch(i)$ é o conjunto de nós filhos de
+              $i$. O valor de um nó folha é o valor do indicador. O valor de uma SPN $S$ é o valor
+              de sua raíz.
+
               \begin{figure}[h]
-                \includegraphics[scale=0.3]{spn_1.png}
-                \includegraphics[scale=0.3]{spn_2.png}
+                \includegraphics[scale=0.397]{spn_1.png}
+                \includegraphics[scale=0.397]{spn_2.png}
                 \caption{A esquerda uma SPN implementando uma naive Bayes mixture model. A direita
                   uma SPN implementando uma junction tree. Fonte: Poon e
                   Domingos\cite{poon-domingos}.}
               \end{figure}
 
-              \begin{spn-def}[1] Uma SPN $S$ é válida sse $\exists P:S(x)=P(x)$, $\forall x$.
-              \end{spn-def} \\~\\
+              \begin{spn-thm} Uma SPN $S$ é válida se $S$ e toda sub-SPN de $S$ é completa e
+                consistente.\\~\\
+              \end{spn-thm}
 
-              \begin{spn-def}[2] Uma SPN é \emph{completa} sse todos os filhos do mesmo nó soma tem
-                mesmo escopo.
-              \end{spn-def} \\~\\
-
-              \begin{spn-def}[3] Uma SPN é \emph{consistente} sse nenhuma variável aparece negada
-                em um filho de um nó produto e não-negada em outro.
-              \end{spn-def} \\~\\
-
-              \begin{spn-thm} Uma SPN é válida se ela é completa e consistente.
-              \end{spn-thm} \\~\\
-
-              SPNs válidas são desejáveis pois uma SPN válida computa $P(x_1,...,x_n)$ em tempo
-              linear em seu tamanho, além de completude e consistência permitirem que a inferência
-              da SPN seja garantidamente eficiente.
+              Existem SPNs que não são válidas, mas SPNs válidas são desejáveis pois computam
+              $P(x_1,...,x_n)$ em tempo linear em seu tamanho, além de completude e consistência
+              permitirem que a inferência da SPN seja garantidamente eficiente.
 \vspace*{0.2cm}
             \end{block}
 \vspace*{0.2cm}
@@ -228,7 +228,7 @@
                   \end{tabular}
                 \end{center}
                 \caption{\justifying Taxa média de acertos em uma comparação entre SPNs e CDBNs
-                  (Convolutional Deep Belief Networks) em classificação (reconhecimento) de 
+                  (Convolutional Deep Belief Networks) em classificação (reconhecimento) de
                   imagens. SPNs obtiveram resultados quase perfeitos em reconhecimento.}
               \end{table}
 
