@@ -143,7 +143,7 @@ Orientador: Denis Deratani Mauá
 
 \paragraph{
   Esta semana foi importante para ter a base matemática para entender Sum-Product Networks. SPNs
-  são redes probabilísticas que podem ser representadas como um digrafo acíclico enraizado com
+  são redes probabilísticas que podem ser representadas como um digrafo acíclico com
   folhas representando probabilidades. Como cada folha é uma distribuição monovariável, então uma
   SPN que tenha mais de uma folha e tenha ao menos um nó produto é uma distribuição de
   probabilidade multivariada. Isso ocorre por causa da definição de consistência de uma SPN, que
@@ -180,7 +180,7 @@ Orientador: Denis Deratani Mauá
 \paragraph{
   O capítulo ``Compiling Bayesian Networks'' pode ser visto como um precursor para a criação de
   Sum-Product Networks. Neste capítulo Darwiche propõe um método de se representar uma Rede
-  Bayesiana como um digrafo acíclico enraizado onde as folhas são parâmetros ou indicadores e os
+  Bayesiana como um digrafo acíclico onde as folhas são parâmetros ou indicadores e os
   nós internos são somas ou produtos de tal forma que o resultado deste circuito aritmético na raíz
   é a network polynomial da distribuição.
 }
@@ -241,12 +241,12 @@ Orientador: Denis Deratani Mauá
 \paragraph{
   Eliminação de variáveis é um método por estrutura de simplificar uma rede para torna-la mais
   tratável. Ao contrário da estrutura local (que será visto mais a frente), métodos por estrutura
-  não usam os parâmetros dados pela query na hora da inferência. Isso as torna mais gerais, mas
+  não usam os parâmetros dados pela query na hora da inferência. Isso as tornam mais gerais, mas
   não possuem melhor performance quando comparadas a métodos que usam estrutura local.
 }
 
 \paragraph{
-  Factors podem ser vistos como funções que mapeiam cada instância das variável em um número
+  Factors podem ser vistos como funções que mapeiam cada instância das variáveis em um número
   não-negativo. Também chamados de potenciais, factors servem para representar um jeito mais
   compacto de se fazer operações em CPTs.
 }
@@ -312,7 +312,7 @@ Orientador: Denis Deratani Mauá
 \paragraph{
   Primeiro foram vistos dois algoritmos não tão triviais para se achar uma melhor ordem de
   eliminação. Os dois algoritmos são similares, suas únicas diferenças sendo a heurística usada.
-  A primeira tenta construir uma ordem que tenha menor fator possível. A segunda tenta adicionar
+  A primeira tenta construir uma ordem que tenha menor factor possível. A segunda tenta adicionar
   o menor número possível de arestas no grafo de interação.
 }
 
@@ -333,12 +333,12 @@ Orientador: Denis Deratani Mauá
 \paragraph{
   O próximo tópico do livro era como se computar marginais posteriores. Foi então pesquisado o que
   significavam marginais posteriores e marginais conjuntas. Para isso foi usado o próprio livro do
-  Darwiche\cite{bayes-net-darwiche} que definia-as. Em seguida foi visto como usar eliminação de
-  variáveis para computar marginais conjuntas. Também foram vistas várias notações.
+  Darwiche\cite{bayes-net-darwiche} que as definia em um outro capítulo. Em seguida foi visto como
+  usar eliminação de variáveis para computar marginais conjuntas. Também foram vistas várias notações.
 }
 
 \paragraph{
-  O seguinte assunto era sobre estrutura e complexidade da rede. A complexidade de duas Redes
+  O assunto seguinte era sobre estrutura e complexidade da rede. A complexidade de duas Redes
   Bayesianas não se restringe apenas ao número de variáveis, mas também a sua estrutura. Um mesmo
   número de variáveis pode ter ordens ótimas de eliminação com diferentes complexidades. Isso se
   deve ao fator de treewidth da rede.
@@ -389,7 +389,7 @@ Orientador: Denis Deratani Mauá
   Foram lidos alguns exemplos de uso de estrutura local para deixar a rede mais simples. Uma delas
   é com o uso de restrições lógicas. Se um nó pai tem uma relação de ou-lógico com seus filhos,
   então podemos simplificar a rede fatorando a network polynomial de tal forma que tenhamos um
-  circuit aritmético tratável, mesmo que o número de filhos seja exponencial.
+  circuito aritmético tratável, mesmo que o número de filhos seja exponencial.
 }
 
 \paragraph{
@@ -495,7 +495,7 @@ Orientador: Denis Deratani Mauá
 
 \paragraph{
   Até este ponto do projeto não havia sido lido nada sobre aprendizado em Sum-Product Networks.
-  Antes de entrar neste ponto era preciso saber toda a base que foi visto nos relatórios
+  Antes de entrar neste ponto era preciso saber toda a base que foi vista nos relatórios
   anteriores. Para fazer o pôster, no entanto, era preciso ter a ideia de aprendizado de SPNs em
   mente, e portanto foi lida a parte sobre aprendizado em Poon e Domingos \cite{poon-domingos} e
   também em Gens e Domingos \cite{gens-domingos}.
@@ -590,16 +590,16 @@ Orientador: Denis Deratani Mauá
 }
 
 \paragraph{
-  Apesar de tudo isso, acredito que estudei no mínimo 100 horas. Os relatórios ajudam tanto a
-  memorizar quando a revisar o conteúdo visto durante a semana, e portanto acredito serem uma forma
-  de estudo.
+  Apesar de tudo isso, acredito que estudei no mínimo 100 horas. Os relatórios ajudam tanto para
+  memorizar quando para revisar o conteúdo visto durante a semana, e portanto acredito serem uma
+  forma de estudo.
 }
 
 \paragraph{
   Adicionalmente, as aulas de MAC0425 (Inteligência Artificial) contribuíram bastante no estudo da
   Iniciação Científica, já que o conteúdo de aula e o que foi visto no projeto tem partes iguais,
-  principalmente os assuntos sobre Aprendizado e Incerteza na aula de MAC0425 são diretamente
-  relacionados ao projeto.
+  principalmente os assuntos sobre Aprendizado e Incerteza na aula de MAC0425, que são diretamente
+  relacionadas ao projeto.
 }
 
 \newpage
